@@ -15,5 +15,9 @@ namespace DynaRealm.ViewModels
         public bool IsToday => Date.Date == DateTime.Today;
 
         public string DayForeground => IsCurrentMonth ? "Black" : "Gray";
+
+        public string BackgroundColor => IsToday ? "Red" : "Transparent";
+
+        public string ForegroundColor => IsToday ? "White" : DayForeground;
     }
 }

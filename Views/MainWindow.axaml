@@ -61,9 +61,16 @@
 
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
-					<Border BorderBrush="Gray" BorderThickness="0.5" MinHeight="80" Padding="6">
+					<Border BorderBrush="Gray"
+						BorderThickness="0.5"
+						MinHeight="80"
+						Padding="6"
+						Background="{Binding BackgroundColor}">
+
 						<TextBlock Text="{Binding DayNumber}"
-							Foreground="{Binding DayForeground}"/>
+								   Foreground="{Binding ForegroundColor}"
+								   HorizontalAlignment="Left"
+								   VerticalAlignment="Top"/>
 					</Border>
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
