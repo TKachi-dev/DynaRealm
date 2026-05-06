@@ -51,6 +51,22 @@
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>
+
+		<ItemsControl ItemsSource="{Binding CalendarDays}" Margin="0,8,0,0">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<UniformGrid Columns="7" Rows="6"/>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Border BorderBrush="Gray" BorderThickness="0.5" MinHeight="80" Padding="6">
+						<TextBlock Text="{Binding DayNumber}"/>
+					</Border>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
 	</StackPanel>
 
 </Window>
