@@ -4,10 +4,10 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
-using DyanRealm.ViewModels;
-using DyanRealm.Views;
+using DynaRealm.ViewModels;
+using DynaRealm.Views;
 
-namespace DyanRealm;
+namespace DynaRealm;
 
 public partial class App : Application
 {

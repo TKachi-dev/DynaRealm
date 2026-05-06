@@ -1,4 +1,4 @@
-﻿namespace DyanRealm.ViewModels;
+﻿namespace DynaRealm.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {

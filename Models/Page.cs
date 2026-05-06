@@ -8,7 +8,7 @@ namespace DynaRealm.Models
     {
         public Guid Id { get; set; }
 
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         public DateTime StartDate { get; set; }
 
@@ -16,7 +16,7 @@ namespace DynaRealm.Models
 
         public Guid TabId { get; set; }
 
-        public string Body { get; set; }
+        public string Body { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }
 

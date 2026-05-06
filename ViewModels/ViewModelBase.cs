@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace DyanRealm.ViewModels;
+namespace DynaRealm.ViewModels;
 
 public abstract class ViewModelBase : ObservableObject
 {

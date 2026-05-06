@@ -2,9 +2,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using DyanRealm.ViewModels;
+using DynaRealm.ViewModels;
 
-namespace DyanRealm;
+namespace DynaRealm;
 
 /// <summary>
 /// Given a view model, returns the corresponding view if possible.
