@@ -18,10 +18,36 @@
 	<StackPanel Margin="20">
 		<TextBlock Text="DynaRealm" FontSize="24" Margin="0,0,0,10"/>
 
-		<ItemsControl ItemsSource="{Binding Tabs}">
+		<Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+			<ItemsControl ItemsSource="{Binding Tabs}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<StackPanel Orientation="Horizontal"/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Button Content="{Binding Name}" Margin="4"/>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+
+			<StackPanel Grid.Column="1" Orientation="Horizontal">
+				<Button Content="＜" Margin="4"/>
+				<TextBlock Text="{Binding CurrentMonthText}" VerticalAlignment="Center" FontSize="18" Margin="8,0"/>
+				<Button Content="＞" Margin="4"/>
+			</StackPanel>
+		</Grid>
+
+		<ItemsControl ItemsSource="{Binding WeekDays}">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<UniformGrid Columns="7"/>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
-					<Button Content="{Binding Name}" Margin="4"/>
+					<TextBlock Text="{Binding}" HorizontalAlignment="Center" FontWeight="Bold"/>
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>
