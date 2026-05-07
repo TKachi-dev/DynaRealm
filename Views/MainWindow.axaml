@@ -62,15 +62,27 @@
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
 					<Border BorderBrush="Gray"
-						BorderThickness="0.5"
-						MinHeight="80"
-						Padding="6"
-						Background="{Binding BackgroundColor}">
+							BorderThickness="0.5"
+							MinHeight="80"
+							Padding="6"
+							Background="{Binding BackgroundColor}">
 
-						<TextBlock Text="{Binding DayNumber}"
-								   Foreground="{Binding ForegroundColor}"
-								   HorizontalAlignment="Left"
-								   VerticalAlignment="Top"/>
+						<StackPanel>
+							<TextBlock Text="{Binding DayNumber}"
+									   Foreground="{Binding ForegroundColor}"
+									   HorizontalAlignment="Left"
+									   VerticalAlignment="Top"/>
+
+							<ItemsControl ItemsSource="{Binding Pages}" Margin="0,6,0,0">
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Button Content="{Binding Title}"
+												Margin="0,2,0,0"
+												HorizontalAlignment="Stretch"/>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						</StackPanel>
 					</Border>
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>

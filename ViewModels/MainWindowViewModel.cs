@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using DynaRealm.Models;
 using DynaRealm.Services;
@@ -52,7 +53,19 @@ public partial class MainWindowViewModel : ViewModelBase
             CalendarDays.Add(new CalendarDayViewModel
             {
                 Date = date,
-                IsCurrentMonth = date.Month == targetDate.Month
+                IsCurrentMonth = date.Month == targetDate.Month,
+
+                Pages = new List<CalendarPageItemViewModel>
+                {
+                    new CalendarPageItemViewModel
+                    {
+                        Title = "Java勉強"
+                    },
+                    new CalendarPageItemViewModel
+                    {
+                        Title = "買い物"
+                    }
+                }
             });
         }
     }

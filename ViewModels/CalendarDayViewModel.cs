@@ -19,5 +19,7 @@ namespace DynaRealm.ViewModels
         public string BackgroundColor => IsToday ? "Red" : "Transparent";
 
         public string ForegroundColor => IsToday ? "White" : DayForeground;
+
+        public List<CalendarPageItemViewModel> Pages { get; set; } = new();
     }
 }
