@@ -38,9 +38,9 @@
 			</ItemsControl>
 
 			<StackPanel Grid.Column="1" Orientation="Horizontal">
-				<Button Content="＜" Margin="4"/>
+				<Button Content="＜" Margin="4" Click="PreviousMonth_Click"/>
 				<TextBlock Text="{Binding CurrentMonthText}" VerticalAlignment="Center" FontSize="18" Margin="8,0"/>
-				<Button Content="＞" Margin="4"/>
+				<Button Content="＞" Margin="4" Click="NextMonth_Click"/>
 			</StackPanel>
 		</Grid>
 

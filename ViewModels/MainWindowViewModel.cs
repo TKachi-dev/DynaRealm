@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using DynaRealm.Models;
 using DynaRealm.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace DynaRealm.ViewModels;
 
@@ -15,9 +16,10 @@ public partial class MainWindowViewModel : ViewModelBase
     // カレンダー日付一覧
     public ObservableCollection<CalendarDayViewModel> CalendarDays { get; set; } = new();
 
+    private DateTime _currentDisplayDate = DateTime.Today;
+
     // 月表示
-    public string CurrentMonthText { get; set; } =
-        $"{DateTime.Today.Year}年{DateTime.Today.Month}月";
+    public string CurrentMonthText { get; set; } = string.Empty;
 
     // 曜日
     public string[] WeekDays { get; set; } =
@@ -36,7 +38,33 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         // カレンダー日付生成
+        UpdateCurrentMonthText();
         CreateCalendarDays(DateTime.Today);
+    }
+
+    public void ReloadCalendar()
+    {
+        CreateCalendarDays(_currentDisplayDate);
+    }
+
+    public void MovePreviousMonth()
+    {
+        _currentDisplayDate = _currentDisplayDate.AddMonths(-1);
+        UpdateCurrentMonthText();
+        CreateCalendarDays(_currentDisplayDate);
+    }
+
+    public void MoveNextMonth()
+    {
+        _currentDisplayDate = _currentDisplayDate.AddMonths(1);
+        UpdateCurrentMonthText();
+        CreateCalendarDays(_currentDisplayDate);
+    }
+
+    private void UpdateCurrentMonthText()
+    {
+        CurrentMonthText = $"{_currentDisplayDate.Year}年{_currentDisplayDate.Month}月";
+        OnPropertyChanged(nameof(CurrentMonthText));
     }
 
     // カレンダー日付生成処理
