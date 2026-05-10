@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DynaRealm.ViewModels
@@ -21,5 +22,13 @@ namespace DynaRealm.ViewModels
         public string ForegroundColor => IsToday ? "White" : DayForeground;
 
         public List<CalendarPageItemViewModel> Pages { get; set; } = new();
+
+        public List<CalendarPageItemViewModel> VisiblePages =>
+            Pages.Take(3).ToList();
+
+        public int HiddenPageCount =>
+            Pages.Count > 3 ? Pages.Count - 3 : 0;
+
+        public bool HasHiddenPages => HiddenPageCount > 0;
     }
 }

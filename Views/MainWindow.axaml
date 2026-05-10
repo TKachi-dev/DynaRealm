@@ -18,6 +18,11 @@
 	<StackPanel Margin="20">
 		<TextBlock Text="DynaRealm" FontSize="24" Margin="0,0,0,10"/>
 
+		<Button Content="＋ページ追加"
+				HorizontalAlignment="Right"
+				Margin="0,0,0,10"
+				Click="OpenPageEditor_Click"/>
+
 		<Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
 			<ItemsControl ItemsSource="{Binding Tabs}">
 				<ItemsControl.ItemsPanel>
@@ -73,7 +78,7 @@
 									   HorizontalAlignment="Left"
 									   VerticalAlignment="Top"/>
 
-							<ItemsControl ItemsSource="{Binding Pages}" Margin="0,6,0,0">
+							<ItemsControl ItemsSource="{Binding VisiblePages}" Margin="0,6,0,0">
 								<ItemsControl.ItemTemplate>
 									<DataTemplate>
 										<Button Content="{Binding Title}"
@@ -82,6 +87,11 @@
 									</DataTemplate>
 								</ItemsControl.ItemTemplate>
 							</ItemsControl>
+
+							<TextBlock Text="{Binding HiddenPageCount, StringFormat=+{0}件}"
+									   Foreground="Gray"
+									   Margin="0,4,0,0"
+									   IsVisible="{Binding HasHiddenPages}"/>
 						</StackPanel>
 					</Border>
 				</DataTemplate>

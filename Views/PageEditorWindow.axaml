@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vm="using:DynaRealm.ViewModels"
+        x:Class="DynaRealm.Views.PageEditorWindow"
+		x:DataType="vm:PageEditorViewModel"
+        Width="600"
+        Height="500"
+        Title="ページ登録">
+
+	<Design.DataContext>
+		<vm:PageEditorViewModel/>
+	</Design.DataContext>
+
+	<StackPanel Margin="20" Spacing="10">
+		<TextBlock Text="ページ登録" FontSize="24"/>
+
+		<TextBox PlaceholderText="タイトル"
+				 Text="{Binding Title}"/>
+
+		<TextBox PlaceholderText="本文"
+				 Text="{Binding Body}"
+                 AcceptsReturn="True"
+                 Height="250"/>
+
+		<Button Content="保存"
+                HorizontalAlignment="Right"
+                Width="100"
+				Click="SaveButton_Click"/>
+	</StackPanel>
+
+</Window>

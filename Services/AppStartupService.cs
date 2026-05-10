@@ -31,6 +31,25 @@ namespace DynaRealm.Services
 
                     db.SaveChanges();
                 }
+
+                // テスト用Pageデータが存在しない場合のみ追加
+                if (!db.Pages.Any())
+                {
+                    db.Pages.Add(
+                        new Page
+                        {
+                            Id = Guid.NewGuid(),
+                            Title = "Java学習",
+                            StartDate = DateTime.Today,
+                            EndDate = DateTime.Today,
+                            TabId = db.Tabs.First().Id,
+                            Body = "Spring Boot学習",
+                            CreatedAt = DateTime.Now,
+                            UpdatedAt = DateTime.Now
+                        });
+
+                    db.SaveChanges();
+                }
             }
         }
     }

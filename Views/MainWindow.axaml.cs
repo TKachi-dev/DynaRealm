@@ -8,4 +8,10 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
+
+    private void OpenPageEditor_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        var window = new PageEditorWindow();
+        window.Show();
+    }
 }

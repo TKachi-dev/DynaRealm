@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using DynaRealm.Models;
 using DynaRealm.Services;
 
@@ -43,6 +44,12 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         CalendarDays.Clear();
 
+        var pageService = new PageService();
+
+        var pages = pageService.GetPagesByMonth(
+            targetDate.Year,
+            targetDate.Month);
+
         var firstDayOfMonth = new DateTime(targetDate.Year, targetDate.Month, 1);
         var startDate = firstDayOfMonth.AddDays(-(int)firstDayOfMonth.DayOfWeek);
 
@@ -55,17 +62,13 @@ public partial class MainWindowViewModel : ViewModelBase
                 Date = date,
                 IsCurrentMonth = date.Month == targetDate.Month,
 
-                Pages = new List<CalendarPageItemViewModel>
-                {
-                    new CalendarPageItemViewModel
+                Pages = pages
+                    .Where(p => p.StartDate.Date == date.Date)
+                    .Select(p => new CalendarPageItemViewModel
                     {
-                        Title = "Java勉強"
-                    },
-                    new CalendarPageItemViewModel
-                    {
-                        Title = "買い物"
-                    }
-                }
+                        Title = p.Title
+                    })
+                    .ToList()
             });
         }
     }
