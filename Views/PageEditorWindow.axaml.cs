@@ -1,5 +1,7 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using DynaRealm.ViewModels;
+using System;
 
 namespace DynaRealm.Views
 {
@@ -11,14 +13,20 @@ namespace DynaRealm.Views
             InitializeComponent();
 
             _viewModel = new PageEditorViewModel();
-
             DataContext = _viewModel;
         }
 
-        private void SaveButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        public PageEditorWindow(DateTime date)
+        {
+            InitializeComponent();
+
+            _viewModel = new PageEditorViewModel(date);
+            DataContext = _viewModel;
+        }
+
+        private void SaveButton_Click(object? sender, RoutedEventArgs e)
         {
             _viewModel.Save();
-
             Close();
         }
     }

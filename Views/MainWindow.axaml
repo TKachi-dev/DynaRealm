@@ -9,11 +9,11 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="DynaRealm">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
 
 	<StackPanel Margin="20">
 		<TextBlock Text="DynaRealm" FontSize="24" Margin="0,0,0,10"/>
@@ -66,34 +66,41 @@
 
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
-					<Border BorderBrush="Gray"
-							BorderThickness="0.5"
-							MinHeight="80"
-							Padding="6"
-							Background="{Binding BackgroundColor}">
+					<Button Click="DayCell_Click"
+							Tag="{Binding}"
+							Background="Transparent"
+							BorderThickness="0"
+							Padding="0"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch">
+						<Border BorderBrush="Gray"
+								BorderThickness="0.5"
+								MinHeight="80"
+								Padding="6"
+								Background="{Binding BackgroundColor}">
 
-						<StackPanel>
-							<TextBlock Text="{Binding DayNumber}"
-									   Foreground="{Binding ForegroundColor}"
-									   HorizontalAlignment="Left"
-									   VerticalAlignment="Top"/>
+							<StackPanel>
+								<TextBlock Text="{Binding DayNumber}"
+										   Foreground="{Binding ForegroundColor}"
+										   HorizontalAlignment="Left"
+										   VerticalAlignment="Top"/>
 
-							<ItemsControl ItemsSource="{Binding VisiblePages}" Margin="0,6,0,0">
-								<ItemsControl.ItemTemplate>
-									<DataTemplate>
-										<Button Content="{Binding Title}"
-												Margin="0,2,0,0"
-												HorizontalAlignment="Stretch"/>
-									</DataTemplate>
-								</ItemsControl.ItemTemplate>
-							</ItemsControl>
+								<ItemsControl ItemsSource="{Binding VisiblePages}" Margin="0,6,0,0">
+									<ItemsControl.ItemTemplate>
+										<DataTemplate>
+											<TextBlock Text="{Binding Title}"
+													Margin="0,2,0,0"/>
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+								</ItemsControl>
 
-							<TextBlock Text="{Binding HiddenPageCount, StringFormat=+{0}件}"
-									   Foreground="Gray"
-									   Margin="0,4,0,0"
-									   IsVisible="{Binding HasHiddenPages}"/>
-						</StackPanel>
-					</Border>
+								<TextBlock Text="{Binding HiddenPageCount, StringFormat=+{0}件}"
+										   Foreground="Gray"
+										   Margin="0,4,0,0"
+										   IsVisible="{Binding HasHiddenPages}"/>
+							</StackPanel>
+						</Border>
+					</Button>
 				</DataTemplate>
 			</ItemsControl.ItemTemplate>
 		</ItemsControl>

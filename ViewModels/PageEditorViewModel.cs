@@ -13,6 +13,17 @@ namespace DynaRealm.ViewModels
 
         public string Body {  get; set; } = string.Empty;
 
+        public DateTime StartDate { get; set; } = DateTime.Today;
+
+        public PageEditorViewModel()
+        {
+        }
+
+        public PageEditorViewModel(DateTime date)
+        {
+            StartDate = date;
+        }
+
         public void Save()
         {
             using var db = new DynaRealmDbContext();
@@ -25,8 +36,8 @@ namespace DynaRealm.ViewModels
             {
                 Id = Guid.NewGuid(),
                 Title = Title,
-                StartDate = DateTime.Today,
-                EndDate = DateTime.Today,
+                StartDate = StartDate,
+                EndDate = StartDate,
                 TabId = tab.Id,
                 Body = Body,
                 CreatedAt = now,
