@@ -55,4 +55,13 @@ public partial class MainWindow : Window
             ViewModel.SelectTab(tabId);
         }
     }
+
+    private void SearchButton_Click(Object? sender, RoutedEventArgs e)
+    {
+        var keyword = SearchKeywordTextBox.Text;
+
+        var window = new SearchResultWindow(keyword ?? string.Empty);
+
+        window.Show();
+    }
 }

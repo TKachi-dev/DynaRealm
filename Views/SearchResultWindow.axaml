@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DynaRealm.ViewModels"
+        x:Class="DynaRealm.Views.SearchResultWindow"
+        x:DataType="vm:SearchResultViewModel"
+        Width="500"
+        Height="600"
+        Title="検索結果">
+    <StackPanel Margin="20" Spacing="12">
+        <TextBlock Text="{Binding Keyword, StringFormat=検索結果:{0}}"
+                   FontSize="20"
+                   FontWeight="Bold"/>
+
+        <TextBlock Text="該当するページはありません"
+                   Foreground="Gray"
+                   IsVisible="{Binding HasNoResults}"/>
+
+        <ItemsControl ItemsSource="{Binding Results}"
+                      IsVisible="{Binding HasResults}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:CalendarPageItemViewModel">
+                    <Border BorderBrush="Gray"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Padding="8"
+                            Margin="0,4">
+                    <Button Content="{Binding Title}"
+                            Tag="{Binding PageId}"
+                            Click="OpenPageDetail_Click"/>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</Window>

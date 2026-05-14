@@ -63,5 +63,22 @@ namespace DynaRealm.Services
             db.Pages.Remove(page);
             db.SaveChanges();
         }
+
+        public List<Page> SearchPages(string keyword)
+        {
+            using var db = new DynaRealmDbContext();
+
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                return new List<Page>();
+            }
+
+            return db.Pages
+                .Where(p =>
+                    p.Title.Contains(keyword) ||
+                    p.Body.Contains(keyword))
+                .OrderByDescending(p => p.UpdatedAt)
+                .ToList();
+        }
     }
 }
