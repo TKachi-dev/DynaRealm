@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using DynaRealm.ViewModels;
+using System;
 
 namespace DynaRealm.Views;
 
@@ -44,5 +45,14 @@ public partial class MainWindow : Window
     private void NextMonth_Click(object? sender, RoutedEventArgs e)
     {
         ViewModel.MoveNextMonth();
+    }
+
+    private void TabButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button button &&
+            button.Tag is Guid tabId)
+        {
+            ViewModel.SelectTab(tabId);
+        }
     }
 }

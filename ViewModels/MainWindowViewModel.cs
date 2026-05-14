@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DynaRealm.Models;
+using DynaRealm.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using DynaRealm.Models;
-using DynaRealm.Services;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace DynaRealm.ViewModels;
 
@@ -17,6 +15,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<CalendarDayViewModel> CalendarDays { get; set; } = new();
 
     private DateTime _currentDisplayDate = DateTime.Today;
+
+    private Guid _selectedTabId;
 
     // 月表示
     public string CurrentMonthText { get; set; } = string.Empty;
@@ -35,6 +35,11 @@ public partial class MainWindowViewModel : ViewModelBase
         foreach (Tab tab in tabs)
         {
             Tabs.Add(tab);
+        }
+
+        if (Tabs.Any())
+        {
+            _selectedTabId = Tabs.First().Id;
         }
 
         // カレンダー日付生成
@@ -61,6 +66,12 @@ public partial class MainWindowViewModel : ViewModelBase
         CreateCalendarDays(_currentDisplayDate);
     }
 
+    public void SelectTab(Guid tabId)
+    {
+        _selectedTabId = tabId;
+        CreateCalendarDays(_currentDisplayDate);
+    }
+
     private void UpdateCurrentMonthText()
     {
         CurrentMonthText = $"{_currentDisplayDate.Year}年{_currentDisplayDate.Month}月";
@@ -76,7 +87,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
         var pages = pageService.GetPagesByMonth(
             targetDate.Year,
-            targetDate.Month);
+            targetDate.Month,
+            _selectedTabId);
 
         var firstDayOfMonth = new DateTime(targetDate.Year, targetDate.Month, 1);
         var startDate = firstDayOfMonth.AddDays(-(int)firstDayOfMonth.DayOfWeek);
@@ -94,6 +106,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     .Where(p => p.StartDate.Date == date.Date)
                     .Select(p => new CalendarPageItemViewModel
                     {
+                        PageId = p.Id,
                         Title = p.Title
                     })
                     .ToList()

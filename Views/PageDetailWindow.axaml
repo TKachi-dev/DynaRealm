@@ -1,0 +1,42 @@
+<Window xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vm="using:DynaRealm.ViewModels"
+		x:Class="DynaRealm.Views.PageDetailWindow"
+		x:DataType="vm:PageDetailViewModel"
+		Width="700"
+		Height="600"
+		Title="ページ詳細">
+
+	<StackPanel Margin="20" Spacing="12">
+		<TextBlock Text="ページ詳細"
+				   FontSize="24"
+				   FontWeight="Bold"/>
+
+		<TextBlock Text="{Binding DateText}"
+				   Foreground="Gray"/>
+
+		<TextBox Text="{Binding Title}"
+				 FontSize="22"
+				 FontWeight="Bold"
+				 PlaceholderText="タイトル"/>
+
+		<TextBox Text="{Binding Body}"
+				 TextWrapping="Wrap"
+				 AcceptsReturn="True"
+				 Height="350"
+				 PlaceholderText="本文"/>
+
+		<StackPanel Orientation="Horizontal"
+					HorizontalAlignment="Right"
+					Spacing="8">
+			<Button Content="削除"
+					Width="100"
+					Click="DeleteButton_Click"/>
+
+			<Button Content="保存"
+					HorizontalAlignment="Right"
+					Width="100"
+					Click="SaveButton_Click"/>
+		</StackPanel>
+	</StackPanel>
+</Window>

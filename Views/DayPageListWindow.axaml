@@ -33,7 +33,9 @@
                             CornerRadius="6"
                             Padding="8"
                             Margin="0,4">
-                        <TextBlock Text="{Binding Title}"/>
+                        <Button Content="{Binding Title}"
+								Tag="{Binding PageId}"
+								Click="OpenPageDetail_Click"/>
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

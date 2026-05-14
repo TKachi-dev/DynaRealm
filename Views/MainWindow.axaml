@@ -32,7 +32,10 @@
 				</ItemsControl.ItemsPanel>
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
-						<Button Content="{Binding Name}" Margin="4"/>
+						<Button Content="{Binding Name}"
+								Tag="{Binding Id}"
+								Margin="4"
+								Click="TabButton_Click"/>
 					</DataTemplate>
 				</ItemsControl.ItemTemplate>
 			</ItemsControl>

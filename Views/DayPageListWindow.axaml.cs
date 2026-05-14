@@ -1,9 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Interactivity;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DynaRealm.ViewModels;
+using System;
 
 namespace DynaRealm.Views
 {
@@ -25,7 +23,7 @@ namespace DynaRealm.Views
         }
 
         private void OpenPageEditor_Click(object? sender, RoutedEventArgs e)
-        { 
+        {
             if (DataContext is DayPageListViewModel viewModel)
             {
                 var window = new PageEditorWindow(viewModel.Date);
@@ -33,6 +31,22 @@ namespace DynaRealm.Views
                 window.Closed += (_, _) =>
                 {
                     _onPageSaved?.Invoke();
+                    Close();
+                };
+
+                window.Show();
+            }
+        }
+
+        private void OpenPageDetail_Click(object? sender, RoutedEventArgs e)
+        {
+            if (sender is Button button &&
+                button.Tag is Guid pageId)
+            {
+                var window = new PageDetailWindow(pageId, _onPageSaved);
+
+                window.Closed += (_, _) =>
+                {
                     Close();
                 };
 
