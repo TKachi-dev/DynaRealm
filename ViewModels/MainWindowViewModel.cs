@@ -18,6 +18,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private Guid _selectedTabId;
 
+    public Guid SelectedTabId => _selectedTabId;
+
     // 月表示
     public string CurrentMonthText { get; set; } = string.Empty;
 

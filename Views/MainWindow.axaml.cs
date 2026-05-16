@@ -20,14 +20,20 @@ public partial class MainWindow : Window
         if (sender is Button button &&
             button.Tag is CalendarDayViewModel day)
         {
-            var window = new DayPageListWindow(day, ViewModel.ReloadCalendar);
+            var window = new DayPageListWindow(
+                day,
+                ViewModel.SelectedTabId,
+                ViewModel.ReloadCalendar);
+
             window.Show();
         }
     }
 
     private void OpenPageEditor_Click(object? sender, RoutedEventArgs e)
     {
-        var window = new PageEditorWindow();
+        var window = new PageEditorWindow(
+            DateTime.Today,
+            ViewModel.SelectedTabId);
 
         window.Closed += (_, _) =>
         {

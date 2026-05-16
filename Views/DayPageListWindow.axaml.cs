@@ -9,15 +9,21 @@ namespace DynaRealm.Views
     {
         private readonly Action? _onPageSaved;
 
+        private readonly Guid _tabId;
+
         public DayPageListWindow()
         {
             InitializeComponent();
         }
 
-        public DayPageListWindow(CalendarDayViewModel day, Action? onPageSaved = null)
+        public DayPageListWindow(
+            CalendarDayViewModel day,
+            Guid tabId,
+            Action? onPageSaved = null)
         {
             InitializeComponent();
 
+            _tabId = tabId;
             _onPageSaved = onPageSaved;
             DataContext = new DayPageListViewModel(day);
         }
@@ -26,7 +32,7 @@ namespace DynaRealm.Views
         {
             if (DataContext is DayPageListViewModel viewModel)
             {
-                var window = new PageEditorWindow(viewModel.Date);
+                var window = new PageEditorWindow(viewModel.Date, _tabId);
 
                 window.Closed += (_, _) =>
                 {

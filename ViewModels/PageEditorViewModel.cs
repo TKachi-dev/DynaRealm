@@ -1,9 +1,6 @@
 ﻿using DynaRealm.Data;
 using DynaRealm.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
 
 namespace DynaRealm.ViewModels
 {
@@ -11,24 +8,25 @@ namespace DynaRealm.ViewModels
     {
         public string Title { get; set; } = string.Empty;
 
-        public string Body {  get; set; } = string.Empty;
+        public string Body { get; set; } = string.Empty;
 
         public DateTime StartDate { get; set; } = DateTime.Today;
+
+        public Guid TabId { get; set; }
 
         public PageEditorViewModel()
         {
         }
 
-        public PageEditorViewModel(DateTime date)
+        public PageEditorViewModel(DateTime date, Guid tabId)
         {
             StartDate = date;
+            TabId = tabId;
         }
 
         public void Save()
         {
             using var db = new DynaRealmDbContext();
-
-            var tab = db.Tabs.First();
 
             var now = DateTime.Now;
 
@@ -38,7 +36,7 @@ namespace DynaRealm.ViewModels
                 Title = Title,
                 StartDate = StartDate,
                 EndDate = StartDate,
-                TabId = tab.Id,
+                TabId = TabId,
                 Body = Body,
                 CreatedAt = now,
                 UpdatedAt = now,

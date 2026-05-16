@@ -16,11 +16,11 @@ namespace DynaRealm.Views
             DataContext = _viewModel;
         }
 
-        public PageEditorWindow(DateTime date)
+        public PageEditorWindow(DateTime date, Guid tabId)
         {
             InitializeComponent();
 
-            _viewModel = new PageEditorViewModel(date);
+            _viewModel = new PageEditorViewModel(date, tabId);
             DataContext = _viewModel;
         }
 
