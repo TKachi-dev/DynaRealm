@@ -14,6 +14,11 @@ public partial class MainWindowViewModel : ViewModelBase
     // カレンダー日付一覧
     public ObservableCollection<CalendarDayViewModel> CalendarDays { get; set; } = new();
 
+    // 日付一覧オーバーレイ
+    public DayPageListViewModel? SelectedDayPageList { get; set; }
+
+    public bool IsDayOverlayVisible { get; set; }
+
     private DateTime _currentDisplayDate = DateTime.Today;
 
     private Guid _selectedTabId;
@@ -72,6 +77,22 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _selectedTabId = tabId;
         CreateCalendarDays(_currentDisplayDate);
+    }
+
+    public void ShowDayOverlay(CalendarDayViewModel day)
+    {
+        SelectedDayPageList = new DayPageListViewModel(day);
+        IsDayOverlayVisible = true;
+
+        OnPropertyChanged(nameof(SelectedDayPageList));
+        OnPropertyChanged(nameof(IsDayOverlayVisible));
+    }
+
+    public void CloseDayOverlay()
+    {
+        IsDayOverlayVisible = false;
+
+        OnPropertyChanged(nameof(IsDayOverlayVisible));
     }
 
     private void UpdateCurrentMonthText()

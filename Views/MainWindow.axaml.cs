@@ -20,12 +20,7 @@ public partial class MainWindow : Window
         if (sender is Button button &&
             button.Tag is CalendarDayViewModel day)
         {
-            var window = new DayPageListWindow(
-                day,
-                ViewModel.SelectedTabId,
-                ViewModel.ReloadCalendar);
-
-            window.Show();
+            ViewModel.ShowDayOverlay(day);
         }
     }
 
@@ -62,12 +57,50 @@ public partial class MainWindow : Window
         }
     }
 
-    private void SearchButton_Click(Object? sender, RoutedEventArgs e)
+    private void SearchButton_Click(object? sender, RoutedEventArgs e)
     {
         var keyword = SearchKeywordTextBox.Text;
 
         var window = new SearchResultWindow(keyword ?? string.Empty);
 
         window.Show();
+    }
+
+    private void CloseDayOverlay_Click(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.CloseDayOverlay();
+    }
+
+    private void OpenPageEditorFromOverlay_Click(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel.SelectedDayPageList == null)
+        {
+            return;
+        }
+
+        var window = new PageEditorWindow(
+            ViewModel.SelectedDayPageList.Date,
+            ViewModel.SelectedTabId);
+
+        window.Closed += (_, _) =>
+        {
+            ViewModel.ReloadCalendar();
+            ViewModel.CloseDayOverlay();
+        };
+
+        window.Show();
+    }
+
+    private void OpenPageDetailFromOverlay_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button button &&
+            button.Tag is Guid pageId)
+        {
+            var window = new PageDetailWindow(pageId, ViewModel.ReloadCalendar);
+
+            ViewModel.CloseDayOverlay();
+
+            window.Show();
+        }
     }
 }
