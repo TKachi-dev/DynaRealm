@@ -6,6 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="DynaRealm.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+		KeyDown="Window_KeyDown"
         Icon="/Assets/avalonia-logo.ico"
         Title="DynaRealm">
 
@@ -122,8 +123,15 @@
 			</ItemsControl>
 		</StackPanel>
 
-	<!-- 日付一覧オーバーレイ -->
-		<Border Width="420"
+		<!-- 背景暗転 -->
+		<Border Background="#80000000"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				IsVisible="{Binding IsDayOverlayVisible}"
+				PointerPressed="OverlayBackground_PointerPressed"/>
+
+		<!-- 日付一覧オーバーレイ -->
+		<Border Width="460"
 				Padding="20"
 				Background="#FFFFFF"
 				BorderBrush="#CCCCCC"
@@ -136,7 +144,7 @@
 			<StackPanel Spacing="12">
 				<Grid ColumnDefinitions="*,Auto">
 					<TextBlock Text="{Binding SelectedDayPageList.DateText}"
-							   FontSize="20"
+							   FontSize="22"
 							   FontWeight="Bold"/>
 					<Button Grid.Column="1"
 							Content="閉じる"
@@ -154,7 +162,7 @@
 							  IsVisible="{Binding SelectedDayPageList.HasPages}">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate x:DataType="vm:CalendarPageItemViewModel">
-							<Border BorderBrush="Gray"
+							<Border BorderBrush="#DDDDDD"
 									BorderThickness="1"
 									CornerRadius="6"
 									Padding="8"
@@ -169,9 +177,9 @@
 
 				<Button Content="＋ページ追加"
 						HorizontalAlignment="Right"
+						Width="120"
 						Click="OpenPageEditorFromOverlay_Click"/>
 			</StackPanel>
 		</Border>
 	</Grid>
-
 </Window>

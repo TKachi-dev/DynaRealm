@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using DynaRealm.ViewModels;
 using System;
@@ -101,6 +102,20 @@ public partial class MainWindow : Window
             ViewModel.CloseDayOverlay();
 
             window.Show();
+        }
+    }
+
+    private void OverlayBackground_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        ViewModel.CloseDayOverlay();
+    }
+
+    private void Window_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape &&
+            ViewModel.IsDayOverlayVisible)
+        {
+            ViewModel.CloseDayOverlay();
         }
     }
 }
