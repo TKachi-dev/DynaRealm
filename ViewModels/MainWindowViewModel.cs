@@ -9,7 +9,7 @@ namespace DynaRealm.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     // タブ一覧
-    public ObservableCollection<Tab> Tabs { get; set; } = new();
+    public ObservableCollection<TabViewModel> Tabs { get; set; } = new();
 
     // カレンダー日付一覧
     public ObservableCollection<CalendarDayViewModel> CalendarDays { get; set; } = new();
@@ -41,12 +41,19 @@ public partial class MainWindowViewModel : ViewModelBase
 
         foreach (Tab tab in tabs)
         {
-            Tabs.Add(tab);
+            Tabs.Add(new TabViewModel
+            {
+                Id = tab.Id,
+                Name = tab.Name
+            });
         }
 
         if (Tabs.Any())
         {
-            _selectedTabId = Tabs.First().Id;
+            var firstTab = Tabs.First();
+
+            _selectedTabId = firstTab.Id;
+            firstTab.SetSelected(true);
         }
 
         // カレンダー日付生成
@@ -76,6 +83,12 @@ public partial class MainWindowViewModel : ViewModelBase
     public void SelectTab(Guid tabId)
     {
         _selectedTabId = tabId;
+
+        foreach (var tab in Tabs)
+        {
+            tab.SetSelected(tab.Id == tabId);
+        }
+
         CreateCalendarDays(_currentDisplayDate);
     }
 

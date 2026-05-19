@@ -1,25 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DynaRealm.ViewModels
 {
     public class CalendarDayViewModel
     {
-        public DateTime Date {  get; set; }
+        public DateTime Date { get; set; }
 
         public int DayNumber => Date.Day;
 
-        public bool IsCurrentMonth {  get; set; }
+        public bool IsCurrentMonth { get; set; }
 
         public bool IsToday => Date.Date == DateTime.Today;
 
         public string DayForeground => IsCurrentMonth ? "Black" : "Gray";
 
-        public string BackgroundColor => IsToday ? "Red" : "Transparent";
+        public string BackgroundColor => "Transparent";
 
-        public string ForegroundColor => IsToday ? "White" : DayForeground;
+        public string ForegroundColor => DayForeground;
+
+        public string DayNumberBackground =>
+            IsToday ? "#FF6666" : "Transparent";
+
+        public string DayNumberForeground =>
+            IsToday ? "White" : DayForeground;
 
         public List<CalendarPageItemViewModel> Pages { get; set; } = new();
 

@@ -1,18 +1,18 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:DynaRealm.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="DynaRealm.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vm="using:DynaRealm.ViewModels"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		x:Class="DynaRealm.Views.MainWindow"
+		x:DataType="vm:MainWindowViewModel"
 		KeyDown="Window_KeyDown"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="DynaRealm">
+		Icon="/Assets/avalonia-logo.ico"
+		Title="DynaRealm">
 
 	<Design.DataContext>
 		<!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+		to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
 
@@ -48,6 +48,8 @@
 						<DataTemplate>
 							<Button Content="{Binding Name}"
 									Tag="{Binding Id}"
+									Background="{Binding BackgroundColor}"
+									Foreground="{Binding ForegroundColor}"
 									Margin="4"
 									Click="TabButton_Click"/>
 						</DataTemplate>
@@ -97,16 +99,19 @@
 									Background="{Binding BackgroundColor}">
 
 								<StackPanel>
-									<TextBlock Text="{Binding DayNumber}"
-											   Foreground="{Binding ForegroundColor}"
-											   HorizontalAlignment="Left"
-											   VerticalAlignment="Top"/>
+									<Border Background="{Binding DayNumberBackground}"
+											CornerRadius="10"
+											Padding="4"
+											HorizontalAlignment="Left">
+										<TextBlock Text="{Binding DayNumber}"
+												   Foreground="{Binding DayNumberForeground}"/>
+									</Border>
 
 									<ItemsControl ItemsSource="{Binding VisiblePages}" Margin="0,6,0,0">
 										<ItemsControl.ItemTemplate>
 											<DataTemplate>
 												<TextBlock Text="{Binding Title}"
-														Margin="0,2,0,0"/>
+														   Margin="0,2,0,0"/>
 											</DataTemplate>
 										</ItemsControl.ItemTemplate>
 									</ItemsControl>
@@ -137,6 +142,7 @@
 				BorderBrush="#CCCCCC"
 				BorderThickness="1"
 				CornerRadius="12"
+				BoxShadow="0 8 24 0 #66000000"
 				HorizontalAlignment="Center"
 				VerticalAlignment="Center"
 				IsVisible="{Binding IsDayOverlayVisible}">
@@ -158,22 +164,29 @@
 						   Foreground="Gray"
 						   IsVisible="{Binding SelectedDayPageList.HasNoPages}"/>
 
-				<ItemsControl ItemsSource="{Binding SelectedDayPageList.Pages}"
+				<ScrollViewer MaxHeight="220"
 							  IsVisible="{Binding SelectedDayPageList.HasPages}">
-					<ItemsControl.ItemTemplate>
-						<DataTemplate x:DataType="vm:CalendarPageItemViewModel">
-							<Border BorderBrush="#DDDDDD"
-									BorderThickness="1"
-									CornerRadius="6"
-									Padding="8"
-									Margin="0,4">
-								<Button Content="{Binding Title}"
-										Tag="{Binding PageId}"
-										Click="OpenPageDetailFromOverlay_Click"/>
-							</Border>
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl>
+					<ItemsControl ItemsSource="{Binding SelectedDayPageList.Pages}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate x:DataType="vm:CalendarPageItemViewModel">
+								<Border BorderBrush="#DDDDDD"
+										BorderThickness="1"
+										CornerRadius="6"
+										Padding="8"
+										Margin="0,4">
+									<Button Content="{Binding Title}"
+											Tag="{Binding PageId}"
+											Background="#F7F7F7"
+											BorderThickness="0"
+											HorizontalAlignment="Stretch"
+											HorizontalContentAlignment="Left"
+											Padding="6"
+											Click="OpenPageDetailFromOverlay_Click"/>
+								</Border>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
 
 				<Button Content="＋ページ追加"
 						HorizontalAlignment="Right"
