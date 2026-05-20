@@ -27,16 +27,7 @@ public partial class MainWindow : Window
 
     private void OpenPageEditor_Click(object? sender, RoutedEventArgs e)
     {
-        var window = new PageEditorWindow(
-            DateTime.Today,
-            ViewModel.SelectedTabId);
-
-        window.Closed += (_, _) =>
-        {
-            ViewModel.ReloadCalendar();
-        };
-
-        window.Show();
+        ViewModel.OpenEditorScreen(DateTime.Today);
     }
 
     private void PreviousMonth_Click(object? sender, RoutedEventArgs e)
@@ -79,17 +70,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        var window = new PageEditorWindow(
-            ViewModel.SelectedDayPageList.Date,
-            ViewModel.SelectedTabId);
-
-        window.Closed += (_, _) =>
-        {
-            ViewModel.ReloadCalendar();
-            ViewModel.CloseDayOverlay();
-        };
-
-        window.Show();
+        ViewModel.OpenEditorScreen(ViewModel.SelectedDayPageList.Date);
     }
 
     private void OpenPageDetailFromOverlay_Click(object? sender, RoutedEventArgs e)
@@ -97,12 +78,52 @@ public partial class MainWindow : Window
         if (sender is Button button &&
             button.Tag is Guid pageId)
         {
-            var window = new PageDetailWindow(pageId, ViewModel.ReloadCalendar);
-
-            ViewModel.CloseDayOverlay();
-
-            window.Show();
+            ViewModel.OpenDetailScreen(pageId);
         }
+    }
+
+    private void BackToCalendar_Click(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.ShowCalendarScreen();
+    }
+
+    private void SaveEditor_Click(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel.CurrentPageEditor == null)
+        {
+            return;
+        }
+
+        ViewModel.CurrentPageEditor.Save();
+
+        ViewModel.ReloadCalendar();
+        ViewModel.ShowCalendarScreen();
+    }
+
+    private void SaveDetail_Click(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel.CurrentPageDetail == null)
+        {
+            return;
+        }
+
+        ViewModel.CurrentPageDetail.Save();
+
+        ViewModel.ReloadCalendar();
+        ViewModel.ShowCalendarScreen();
+    }
+
+    private void DeleteDetail_Click(object? sender, RoutedEventArgs e)
+    {
+        if (ViewModel.CurrentPageDetail == null)
+        {
+            return;
+        }
+
+        ViewModel.CurrentPageDetail.Delete();
+
+        ViewModel.ReloadCalendar();
+        ViewModel.ShowCalendarScreen();
     }
 
     private void OverlayBackground_PointerPressed(object? sender, PointerPressedEventArgs e)

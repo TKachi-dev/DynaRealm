@@ -17,7 +17,28 @@ public partial class MainWindowViewModel : ViewModelBase
     // 日付一覧オーバーレイ
     public DayPageListViewModel? SelectedDayPageList { get; set; }
 
+    public PageEditorViewModel? CurrentPageEditor { get; set; }
+
+    public PageDetailViewModel? CurrentPageDetail { get; set; }
+
     public bool IsDayOverlayVisible { get; set; }
+
+    public string CurrentScreen { get; set; } = "Calendar";
+
+    public bool IsCalendarScreen => CurrentScreen == "Calendar";
+
+    public bool IsEditorScreen => CurrentScreen == "Editor";
+
+    public bool IsDetailScreen => CurrentScreen == "Detail";
+
+    public string CurrentScreenTitle =>
+        CurrentScreen switch
+        {
+            "Calendar" => "カレンダー",
+            "Editor" => "ページ登録",
+            "Detail" => "ページ詳細",
+            _ => string.Empty
+        };
 
     private DateTime _currentDisplayDate = DateTime.Today;
 
@@ -106,6 +127,61 @@ public partial class MainWindowViewModel : ViewModelBase
         IsDayOverlayVisible = false;
 
         OnPropertyChanged(nameof(IsDayOverlayVisible));
+    }
+
+    public void ShowCalendarScreen()
+    {
+        CurrentScreen = "Calendar";
+
+        OnPropertyChanged(nameof(CurrentScreen));
+        OnPropertyChanged(nameof(IsCalendarScreen));
+        OnPropertyChanged(nameof(IsEditorScreen));
+        OnPropertyChanged(nameof(IsDetailScreen));
+        OnPropertyChanged(nameof(CurrentScreenTitle));
+    }
+
+    public void OpenEditorScreen(DateTime date)
+    {
+        CurrentPageEditor = new PageEditorViewModel(
+            date,
+            _selectedTabId);
+
+        CloseDayOverlay();
+        ShowEditorScreen();
+
+        OnPropertyChanged(nameof(CurrentPageEditor));
+    }
+
+    public void ShowEditorScreen()
+    {
+        CurrentScreen = "Editor";
+
+        OnPropertyChanged(nameof(CurrentScreen));
+        OnPropertyChanged(nameof(IsCalendarScreen));
+        OnPropertyChanged(nameof(IsEditorScreen));
+        OnPropertyChanged(nameof(IsDetailScreen));
+        OnPropertyChanged(nameof(CurrentScreenTitle));
+    }
+
+    public void OpenDetailScreen(Guid pageId)
+    {
+        CurrentPageDetail = new PageDetailViewModel(pageId);
+
+        CloseDayOverlay();
+        ShowDetailScreen();
+
+        OnPropertyChanged(nameof(CurrentPageDetail));
+    }
+
+    public void ShowDetailScreen()
+    {
+        CurrentScreen = "Detail";
+
+        OnPropertyChanged(nameof(CurrentScreen));
+        OnPropertyChanged(nameof(IsCalendarScreen));
+        OnPropertyChanged(nameof(IsEditorScreen));
+        OnPropertyChanged(nameof(IsDetailScreen));
+        OnPropertyChanged(nameof(CurrentScreenTitle));
     }
 
     private void UpdateCurrentMonthText()
