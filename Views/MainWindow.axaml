@@ -38,101 +38,228 @@
 							Click="SearchButton_Click"/>
 				</StackPanel>
 
-				<Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
-					<ItemsControl ItemsSource="{Binding Tabs}">
-						<ItemsControl.ItemsPanel>
-							<ItemsPanelTemplate>
-								<StackPanel Orientation="Horizontal"/>
-							</ItemsPanelTemplate>
-						</ItemsControl.ItemsPanel>
-						<ItemsControl.ItemTemplate>
-							<DataTemplate>
-								<Button Content="{Binding Name}"
-										Tag="{Binding Id}"
-										Background="{Binding BackgroundColor}"
-										Foreground="{Binding ForegroundColor}"
-										Margin="4"
-										Click="TabButton_Click"/>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
+				<StackPanel Orientation="Horizontal"
+							Spacing="8"
+							Margin="0,0,0,10">
+					<Button Content="月表示"
+							Width="100"
+							Click="ShowMonthView_Click"/>
 
-					<StackPanel Grid.Column="1" Orientation="Horizontal">
-						<Button Content="＜" Margin="4" Click="PreviousMonth_Click"/>
-						<TextBlock Text="{Binding CurrentMonthText}" VerticalAlignment="Center" FontSize="18" Margin="8,0"/>
-						<Button Content="＞" Margin="4" Click="NextMonth_Click"/>
-					</StackPanel>
-				</Grid>
+					<Button Content="日割り表示"
+							Width="100"
+							Click="ShowDayView_Click"/>
+				</StackPanel>
+				
+				<Border IsVisible="{Binding IsMonthView}">
+					<StackPanel>
+						<Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+							<ItemsControl ItemsSource="{Binding Tabs}">
+								<ItemsControl.ItemsPanel>
+									<ItemsPanelTemplate>
+										<StackPanel Orientation="Horizontal"/>
+									</ItemsPanelTemplate>
+								</ItemsControl.ItemsPanel>
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Button Content="{Binding Name}"
+												Tag="{Binding Id}"
+												Background="{Binding BackgroundColor}"
+												Foreground="{Binding ForegroundColor}"
+												Margin="4"
+												Click="TabButton_Click"/>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
 
-				<ItemsControl ItemsSource="{Binding WeekDays}">
-					<ItemsControl.ItemsPanel>
-						<ItemsPanelTemplate>
-							<UniformGrid Columns="7"/>
-						</ItemsPanelTemplate>
-					</ItemsControl.ItemsPanel>
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding}" HorizontalAlignment="Center" FontWeight="Bold"/>
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl>
+							<StackPanel Grid.Column="1" Orientation="Horizontal">
+								<Button Content="＜" Margin="4" Click="PreviousMonth_Click"/>
+								<TextBlock Text="{Binding CurrentMonthText}" VerticalAlignment="Center" FontSize="18" Margin="8,0"/>
+								<Button Content="＞" Margin="4" Click="NextMonth_Click"/>
+							</StackPanel>
+						</Grid>
 
-				<ItemsControl ItemsSource="{Binding CalendarDays}" Margin="0,8,0,0">
-					<ItemsControl.ItemsPanel>
-						<ItemsPanelTemplate>
-							<UniformGrid Columns="7" Rows="6"/>
-						</ItemsPanelTemplate>
-					</ItemsControl.ItemsPanel>
+						<ItemsControl ItemsSource="{Binding WeekDays}">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<UniformGrid Columns="7"/>
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding}" HorizontalAlignment="Center" FontWeight="Bold"/>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
 
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<Button Click="DayCell_Click"
-									Tag="{Binding}"
-									Background="Transparent"
-									BorderThickness="0"
-									Padding="0"
-									HorizontalAlignment="Stretch"
-									VerticalAlignment="Stretch">
-								<Border BorderBrush="Gray"
-										BorderThickness="0.5"
-										MinHeight="80"
-										Padding="6"
-										Background="{Binding BackgroundColor}">
+						<ItemsControl ItemsSource="{Binding CalendarDays}" Margin="0,8,0,0">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<UniformGrid Columns="7" Rows="6"/>
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
 
-									<StackPanel>
-										<Border Background="{Binding DayNumberBackground}"
-												CornerRadius="10"
-												Padding="4"
-												HorizontalAlignment="Left">
-											<TextBlock Text="{Binding DayNumber}"
-													   Foreground="{Binding DayNumberForeground}"/>
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Button Click="DayCell_Click"
+											Tag="{Binding}"
+											Background="Transparent"
+											BorderThickness="0"
+											Padding="0"
+											HorizontalAlignment="Stretch"
+											VerticalAlignment="Stretch">
+										<Border BorderBrush="Gray"
+												BorderThickness="0.5"
+												MinHeight="80"
+												Padding="6"
+												Background="{Binding BackgroundColor}">
+
+											<StackPanel>
+												<Border Background="{Binding DayNumberBackground}"
+														CornerRadius="10"
+														Padding="4"
+														HorizontalAlignment="Left">
+													<TextBlock Text="{Binding DayNumber}"
+															   Foreground="{Binding DayNumberForeground}"/>
+												</Border>
+
+												<ItemsControl ItemsSource="{Binding VisiblePages}" Margin="0,6,0,0">
+													<ItemsControl.ItemTemplate>
+														<DataTemplate>
+															<TextBlock Text="{Binding Title}"
+																	   Margin="0,2,0,0"/>
+														</DataTemplate>
+													</ItemsControl.ItemTemplate>
+												</ItemsControl>
+
+												<TextBlock Text="{Binding HiddenPageCount, StringFormat=+{0}件}"
+														   Foreground="Gray"
+														   Margin="0,4,0,0"
+														   IsVisible="{Binding HasHiddenPages}"/>
+											</StackPanel>
 										</Border>
+									</Button>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</StackPanel>
+				</Border>
 
-										<ItemsControl ItemsSource="{Binding VisiblePages}" Margin="0,6,0,0">
-											<ItemsControl.ItemTemplate>
-												<DataTemplate>
-													<TextBlock Text="{Binding Title}"
-															   Margin="0,2,0,0"/>
-												</DataTemplate>
-											</ItemsControl.ItemTemplate>
-										</ItemsControl>
+				<Border IsVisible="{Binding IsDayView}">
+					<StackPanel Margin="0,10,0,0" Spacing="8">
+						<TextBlock Text="日割り表示"
+								   FontSize="20"
+								   FontWeight="Bold"/>
 
-										<TextBlock Text="{Binding HiddenPageCount, StringFormat=+{0}件}"
-												   Foreground="Gray"
-												   Margin="0,4,0,0"
-												   IsVisible="{Binding HasHiddenPages}"/>
-									</StackPanel>
-								</Border>
-							</Button>
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl>
+						<TextBlock Text="{Binding CurrentDaySchedule.DateText}"
+								   FontSize="16"/>
+
+						<Border BorderBrush="#DDDDDD"
+								BorderThickness="1"
+								CornerRadius="8"
+								Padding="10"
+								Background="#FAFAFA"
+								IsVisible="{Binding CurrentDaySchedule.HasAllDayPages}">
+							<StackPanel Spacing="6">
+								<TextBlock Text="時間未設定"
+										   FontWeight="Bold"
+										   Foreground="Gray"/>
+
+								<ItemsControl ItemsSource="{Binding CurrentDaySchedule.AllDayPages}">
+									<ItemsControl.ItemTemplate>
+										<DataTemplate x:DataType="vm:CalendarPageItemViewModel">
+											<Button Tag="{Binding PageId}"
+													Click="OpenPageDetailFromDayView_Click"
+													Background="Transparent"
+													BorderThickness="0"
+													Padding="0"
+													HorizontalAlignment="Stretch"
+													HorizontalContentAlignment="Stretch">
+												<Border Background="{Binding TabColor}"
+														BorderBrush="{Binding TabBorderColor}"
+														BorderThickness="1"
+														CornerRadius="6"
+														Padding="6"
+														Margin="0,2,0,2">
+													<TextBlock Text="{Binding Title}"/>
+												</Border>
+											</Button>
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+								</ItemsControl>
+							</StackPanel>
+						</Border>
+
+						<ScrollViewer MaxHeight="520">
+							<ItemsControl ItemsSource="{Binding CurrentDaySchedule.Hours}">
+								<ItemsControl.ItemTemplate>
+									<DataTemplate x:DataType="vm:DayScheduleHourViewModel">
+										<Grid ColumnDefinitions="72,*"
+											  MinHeight="64">
+
+											<Border Grid.Column="0"
+													BorderBrush="#EEEEEE"
+													BorderThickness="0,0,1,1"
+													Padding="0,8,8,0">
+												<TextBlock Text="{Binding HourText}"
+														   Foreground="#777777"
+														   FontSize="13"
+														   HorizontalAlignment="Right"
+														   VerticalAlignment="Top"/>
+											</Border>
+
+											<Border Grid.Column="1"
+													BorderBrush="#EEEEEE"
+													BorderThickness="0,0,0,1"
+													Background="#FFFFFF"
+													Padding="10,6">
+
+												<ItemsControl ItemsSource="{Binding Pages}">
+													<ItemsControl.ItemTemplate>
+														<DataTemplate x:DataType="vm:CalendarPageItemViewModel">
+															<Button Tag="{Binding PageId}"
+																	Click="OpenPageDetailFromDayView_Click"
+																	Background="Transparent"
+																	BorderThickness="0"
+																	Padding="0"
+																	HorizontalAlignment="Stretch"
+																	HorizontalContentAlignment="Stretch">
+																<Border Background="{Binding TabColor}"
+																		BorderBrush="{Binding TabBorderColor}"
+																		BorderThickness="1"
+																		CornerRadius="6"
+																		Padding="8"
+																		Margin="{Binding CardMargin}"
+																		MinHeight="{Binding Height}">
+																	<StackPanel>
+																		<TextBlock Text="{Binding TimeText}"
+																				   FontSize="11"
+																				   Foreground="Gray"
+																				   IsVisible="{Binding HasTime}"/>
+
+																		<TextBlock Text="{Binding Title}"
+																				   FontSize="13"
+																				   FontWeight="SemiBold"/>
+																	</StackPanel>
+																</Border>
+															</Button>
+														</DataTemplate>
+													</ItemsControl.ItemTemplate>
+												</ItemsControl>
+
+											</Border>
+										</Grid>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						</ScrollViewer>	
+					</StackPanel>
+				</Border>
 			</StackPanel>
 		</Border>
 
 		<!-- ページ登録画面 -->
 		<Border IsVisible="{Binding IsEditorScreen}">
-			<StackPanel Margin="20" Spacing="12">
+			<StackPanel Margin="20" Spacing="14">
 				<Grid ColumnDefinitions="Auto,*">
 					<Button Content="← 戻る"
 							Width="100"
@@ -151,12 +278,20 @@
 				<TextBox Text="{Binding CurrentPageEditor.Title}"
 						 PlaceholderText="タイトル"/>
 
+				<TextBlock Text="開始時間"/>
+				<TextBox Text="{Binding CurrentPageEditor.StartTimeText}"
+						 PlaceholderText="09:00"/>
+
+				<TextBlock Text="終了時間"/>
+				<TextBox Text="{Binding CurrentPageEditor.EndTimeText}"
+						 PlaceholderText="18:00"/>
+
 				<TextBlock Text="本文"/>
 
 				<TextBox Text="{Binding CurrentPageEditor.Body}"
 						 AcceptsReturn="True"
 						 TextWrapping="Wrap"
-						 Height="350"
+						 Height="420"
 						 PlaceholderText="本文"/>
 
 				<Button Content="保存"
@@ -168,7 +303,7 @@
 
 		<!-- ページ詳細画面 -->
 		<Border IsVisible="{Binding IsDetailScreen}">
-			<StackPanel Margin="20" Spacing="12">
+			<StackPanel Margin="20" Spacing="14">
 				<Grid ColumnDefinitions="Auto,*">
 					<Button Content="← 戻る"
 							Width="100"
@@ -189,13 +324,21 @@
 
 				<TextBox Text="{Binding CurrentPageDetail.Title}"
 						 PlaceholderText="タイトル"/>
+				
+				<TextBlock Text="開始時間"/>
+				<TextBox Text="{Binding CurrentPageDetail.StartTimeText}"
+						 PlaceholderText="09:00"/>
+
+				<TextBlock Text="終了時間"/>
+				<TextBox Text="{Binding CurrentPageDetail.EndTimeText}"
+						 PlaceholderText="18:00"/>
 
 				<TextBlock Text="本文"/>
 
 				<TextBox Text="{Binding CurrentPageDetail.Body}"
 						 AcceptsReturn="True"
 						 TextWrapping="Wrap"
-						 Height="350"
+						 Height="420"
 						 PlaceholderText="本文"/>
 
 				<StackPanel Orientation="Horizontal"
@@ -272,10 +415,17 @@
 					</ItemsControl>
 				</ScrollViewer>
 
-				<Button Content="＋ページ追加"
-						HorizontalAlignment="Right"
-						Width="120"
-						Click="OpenPageEditorFromOverlay_Click"/>
+				<StackPanel Orientation="Horizontal"
+							HorizontalAlignment="Right"
+							Spacing="8">
+					<Button Content="日割りを見る"
+							Width="120"
+							Click="ShowDayViewFromOverlay_Click"/>
+
+					<Button Content="＋ページ追加"
+							Width="120"
+							Click="OpenPageEditorFromOverlay_Click"/>
+				</StackPanel>
 			</StackPanel>
 		</Border>
 	</Grid>

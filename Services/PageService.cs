@@ -23,6 +23,22 @@ namespace DynaRealm.Services
                 .ToList();
         }
 
+        public List<Page> GetPagesByDate(DateTime date)
+        {
+            using var db = new DynaRealmDbContext();
+
+            var startDate = date.Date;
+            var endDate = startDate.AddDays(1);
+
+            return db.Pages
+                .Where(p => p.StartDate >= startDate &&
+                            p.StartDate < endDate)
+                .ToList()
+                .OrderBy(p => p.StartTime ?? TimeSpan.MaxValue)
+                .ThenBy(p => p.CreatedAt)
+                .ToList();
+        }
+
         public Page? GetPageById(Guid pageId)
         {
             using var db = new DynaRealmDbContext();
@@ -31,7 +47,12 @@ namespace DynaRealm.Services
                 .FirstOrDefault(p => p.Id == pageId);
         }
 
-        public void UpdatePage(Guid pageId, string title, string body)
+        public void UpdatePage(
+            Guid pageId,
+            string title,
+            string body,
+            TimeSpan? startTime,
+            TimeSpan? endTime)
         {
             using var db = new DynaRealmDbContext();
 
@@ -44,6 +65,8 @@ namespace DynaRealm.Services
 
             page.Title = title;
             page.Body = body;
+            page.StartTime = startTime;
+            page.EndTime = endTime;
             page.UpdatedAt = DateTime.Now;
 
             db.SaveChanges();

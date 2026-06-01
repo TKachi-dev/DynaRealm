@@ -40,6 +40,16 @@ public partial class MainWindow : Window
         ViewModel.MoveNextMonth();
     }
 
+    private void ShowMonthView_Click(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.ShowMonthView();
+    }
+
+    private void ShowDayView_Click(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.ShowDayView();
+    }
+
     private void TabButton_Click(object? sender, RoutedEventArgs e)
     {
         if (sender is Button button &&
@@ -73,7 +83,22 @@ public partial class MainWindow : Window
         ViewModel.OpenEditorScreen(ViewModel.SelectedDayPageList.Date);
     }
 
+    private void ShowDayViewFromOverlay_Click(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.CloseDayOverlay();
+        ViewModel.ShowDayView();
+    }
+
     private void OpenPageDetailFromOverlay_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button button &&
+            button.Tag is Guid pageId)
+        {
+            ViewModel.OpenDetailScreen(pageId);
+        }
+    }
+
+    private void OpenPageDetailFromDayView_Click(object? sender, RoutedEventArgs e)
     {
         if (sender is Button button &&
             button.Tag is Guid pageId)

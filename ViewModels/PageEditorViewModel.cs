@@ -12,6 +12,10 @@ namespace DynaRealm.ViewModels
 
         public DateTime StartDate { get; set; } = DateTime.Today;
 
+        public string StartTimeText { get; set; } = string.Empty;
+
+        public string EndTimeText { get; set; } = string.Empty;
+
         public Guid TabId { get; set; }
 
         public PageEditorViewModel()
@@ -30,12 +34,29 @@ namespace DynaRealm.ViewModels
 
             var now = DateTime.Now;
 
+            TimeSpan? startTime = null;
+            TimeSpan? endTime = null;
+
+            if (TimeSpan.TryParse(StartTimeText, out var parsedStartTime))
+            {
+                startTime = parsedStartTime;
+            }
+
+            if (TimeSpan.TryParse(EndTimeText, out var parsedEndTime))
+            {
+                endTime = parsedEndTime;
+            }
+
             var page = new Page
             {
                 Id = Guid.NewGuid(),
                 Title = Title,
                 StartDate = StartDate,
                 EndDate = StartDate,
+
+                StartTime = startTime,
+                EndTime = endTime,
+
                 TabId = TabId,
                 Body = Body,
                 CreatedAt = now,

@@ -21,6 +21,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public PageDetailViewModel? CurrentPageDetail { get; set; }
 
+    public DayScheduleViewModel? CurrentDaySchedule { get; set; }
+
     public bool IsDayOverlayVisible { get; set; }
 
     public string CurrentScreen { get; set; } = "Calendar";
@@ -41,6 +43,14 @@ public partial class MainWindowViewModel : ViewModelBase
         };
 
     private DateTime _currentDisplayDate = DateTime.Today;
+
+    public DateTime SelectedDate { get; set; } = DateTime.Today;
+
+    public string CalendarViewMode { get; set; } = "Month";
+
+    public bool IsMonthView => CalendarViewMode == "Month";
+
+    public bool IsDayView => CalendarViewMode == "Day";
 
     private Guid _selectedTabId;
 
@@ -85,6 +95,11 @@ public partial class MainWindowViewModel : ViewModelBase
     public void ReloadCalendar()
     {
         CreateCalendarDays(_currentDisplayDate);
+
+        if (IsDayView)
+        {
+            ShowDayView();
+        }
     }
 
     public void MovePreviousMonth()
@@ -115,11 +130,39 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public void ShowDayOverlay(CalendarDayViewModel day)
     {
+        SelectedDate = day.Date;
         SelectedDayPageList = new DayPageListViewModel(day);
         IsDayOverlayVisible = true;
 
+        OnPropertyChanged(nameof(SelectedDate));
         OnPropertyChanged(nameof(SelectedDayPageList));
         OnPropertyChanged(nameof(IsDayOverlayVisible));
+    }
+
+    public void ShowMonthView()
+    {
+        CalendarViewMode = "Month";
+
+        OnPropertyChanged(nameof(CalendarViewMode));
+        OnPropertyChanged(nameof(IsMonthView));
+        OnPropertyChanged(nameof(IsDayView));
+    }
+
+    public void ShowDayView()
+    {
+        var pageService = new PageService();
+
+        var pages = pageService.GetPagesByDate(SelectedDate);
+
+        CurrentDaySchedule =
+            new DayScheduleViewModel(SelectedDate, pages, Tabs);
+
+        CalendarViewMode = "Day";
+
+        OnPropertyChanged(nameof(CurrentDaySchedule));
+        OnPropertyChanged(nameof(CalendarViewMode));
+        OnPropertyChanged(nameof(IsMonthView));
+        OnPropertyChanged(nameof(IsDayView));
     }
 
     public void CloseDayOverlay()
