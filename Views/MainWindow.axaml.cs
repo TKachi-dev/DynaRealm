@@ -50,6 +50,16 @@ public partial class MainWindow : Window
         ViewModel.ShowDayView();
     }
 
+    private void PreviousDay_Click(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.MovePreviousDay();
+    }
+
+    private void NextDay_Click(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.MoveNextDay();
+    }
+
     private void TabButton_Click(object? sender, RoutedEventArgs e)
     {
         if (sender is Button button &&

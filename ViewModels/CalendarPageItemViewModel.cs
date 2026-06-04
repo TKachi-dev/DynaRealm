@@ -67,6 +67,22 @@ namespace DynaRealm.ViewModels
             }
         }
 
+        public double DayTop
+        {
+            get
+            {
+                if (!StartTime.HasValue)
+                {
+                    return 0;
+                }
+
+                return StartTime.Value.TotalMinutes / 60.0 * 64;
+            }
+        }
+
+        public Thickness DayCardMargin =>
+            new Thickness(10, DayTop + 2, 10, 0);
+
         public Thickness CardMargin =>
             new Thickness(0, TopMargin + 2, 0, 4);
 

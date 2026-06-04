@@ -14,6 +14,10 @@ namespace DynaRealm.ViewModels
 
         public List<CalendarPageItemViewModel> AllDayPages { get; }
 
+        public List<CalendarPageItemViewModel> TimedPages { get; }
+
+        public double TimeAxisHeight => 24 * 64;
+
         public bool HasAllDayPages => AllDayPages.Any();
 
         public List<DayScheduleHourViewModel> Hours { get; }
@@ -29,6 +33,11 @@ namespace DynaRealm.ViewModels
 
             AllDayPages = pages
                 .Where(p => !p.StartTime.HasValue)
+                .Select(p => CreatePageItem(p, tabDictionary))
+                .ToList();
+
+            TimedPages = pages
+                .Where(p => p.StartTime.HasValue)
                 .Select(p => CreatePageItem(p, tabDictionary))
                 .ToList();
 

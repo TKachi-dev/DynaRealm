@@ -165,6 +165,24 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(IsDayView));
     }
 
+    public void MovePreviousDay()
+    {
+        SelectedDate = SelectedDate.AddDays(-1);
+
+        OnPropertyChanged(nameof(SelectedDate));
+
+        ShowDayView();
+    }
+
+    public void MoveNextDay()
+    {
+        SelectedDate = SelectedDate.AddDays(1);
+
+        OnPropertyChanged(nameof(SelectedDate));
+
+        ShowDayView();
+    }
+
     public void CloseDayOverlay()
     {
         IsDayOverlayVisible = false;

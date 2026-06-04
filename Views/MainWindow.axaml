@@ -150,8 +150,21 @@
 								   FontSize="20"
 								   FontWeight="Bold"/>
 
-						<TextBlock Text="{Binding CurrentDaySchedule.DateText}"
-								   FontSize="16"/>
+						<StackPanel Orientation="Horizontal"
+									Spacing="8"
+									VerticalAlignment="Center">
+							<TextBlock Text="{Binding CurrentDaySchedule.DateText}"
+									   FontSize="16"
+									   VerticalAlignment="Center"/>
+
+							<Button Content="&lt;"
+									Width="32"
+									Click="PreviousDay_Click"/>
+
+							<Button Content="&gt;"
+									Width="32"
+									Click="NextDay_Click"/>
+						</StackPanel>
 
 						<Border BorderBrush="#DDDDDD"
 								BorderThickness="1"
@@ -190,13 +203,21 @@
 						</Border>
 
 						<ScrollViewer MaxHeight="520">
-							<ItemsControl ItemsSource="{Binding CurrentDaySchedule.Hours}">
-								<ItemsControl.ItemTemplate>
-									<DataTemplate x:DataType="vm:DayScheduleHourViewModel">
-										<Grid ColumnDefinitions="72,*"
-											  MinHeight="64">
+							<Grid ColumnDefinitions="72,*"
+								  Height="{Binding CurrentDaySchedule.TimeAxisHeight}">
 
-											<Border Grid.Column="0"
+								<!-- 左側：時間ラベル -->
+								<ItemsControl Grid.Column="0"
+											  ItemsSource="{Binding CurrentDaySchedule.Hours}">
+									<ItemsControl.ItemsPanel>
+										<ItemsPanelTemplate>
+											<StackPanel/>
+										</ItemsPanelTemplate>
+									</ItemsControl.ItemsPanel>
+
+									<ItemsControl.ItemTemplate>
+										<DataTemplate x:DataType="vm:DayScheduleHourViewModel">
+											<Border Height="64"
 													BorderBrush="#EEEEEE"
 													BorderThickness="0,0,1,1"
 													Padding="0,8,8,0">
@@ -206,52 +227,76 @@
 														   HorizontalAlignment="Right"
 														   VerticalAlignment="Top"/>
 											</Border>
+										</DataTemplate>
+									</ItemsControl.ItemTemplate>
+								</ItemsControl>
 
-											<Border Grid.Column="1"
-													BorderBrush="#EEEEEE"
-													BorderThickness="0,0,0,1"
-													Background="#FFFFFF"
-													Padding="10,6">
+								<!-- 右側：時間軸本体 -->
+								<Grid Grid.Column="1"
+									  Height="{Binding CurrentDaySchedule.TimeAxisHeight}">
 
-												<ItemsControl ItemsSource="{Binding Pages}">
-													<ItemsControl.ItemTemplate>
-														<DataTemplate x:DataType="vm:CalendarPageItemViewModel">
-															<Button Tag="{Binding PageId}"
-																	Click="OpenPageDetailFromDayView_Click"
-																	Background="Transparent"
-																	BorderThickness="0"
-																	Padding="0"
-																	HorizontalAlignment="Stretch"
-																	HorizontalContentAlignment="Stretch">
-																<Border Background="{Binding TabColor}"
-																		BorderBrush="{Binding TabBorderColor}"
-																		BorderThickness="1"
-																		CornerRadius="6"
-																		Padding="8"
-																		Margin="{Binding CardMargin}"
-																		MinHeight="{Binding Height}">
-																	<StackPanel>
-																		<TextBlock Text="{Binding TimeText}"
-																				   FontSize="11"
-																				   Foreground="Gray"
-																				   IsVisible="{Binding HasTime}"/>
+									<!-- 背景の時間罫線 -->
+									<ItemsControl ItemsSource="{Binding CurrentDaySchedule.Hours}">
+										<ItemsControl.ItemsPanel>
+											<ItemsPanelTemplate>
+												<StackPanel/>
+											</ItemsPanelTemplate>
+										</ItemsControl.ItemsPanel>
 
-																		<TextBlock Text="{Binding Title}"
-																				   FontSize="13"
-																				   FontWeight="SemiBold"/>
-																	</StackPanel>
-																</Border>
-															</Button>
-														</DataTemplate>
-													</ItemsControl.ItemTemplate>
-												</ItemsControl>
+										<ItemsControl.ItemTemplate>
+											<DataTemplate x:DataType="vm:DayScheduleHourViewModel">
+												<Border Height="64"
+														BorderBrush="#EEEEEE"
+														BorderThickness="0,0,0,1"
+														Background="#FFFFFF"/>
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+									</ItemsControl>
 
-											</Border>
-										</Grid>
-									</DataTemplate>
-								</ItemsControl.ItemTemplate>
-							</ItemsControl>
-						</ScrollViewer>	
+									<!-- Pageカード重ね表示 -->
+									<ItemsControl ItemsSource="{Binding CurrentDaySchedule.TimedPages}"
+												  Height="{Binding CurrentDaySchedule.TimeAxisHeight}">
+										<ItemsControl.ItemsPanel>
+											<ItemsPanelTemplate>
+												<Grid/>
+											</ItemsPanelTemplate>
+										</ItemsControl.ItemsPanel>
+
+										<ItemsControl.ItemTemplate>
+											<DataTemplate x:DataType="vm:CalendarPageItemViewModel">
+												<Button Tag="{Binding PageId}"
+														Click="OpenPageDetailFromDayView_Click"
+														Background="Transparent"
+														BorderThickness="0"
+														Padding="0"
+														HorizontalAlignment="Stretch"
+														HorizontalContentAlignment="Stretch"
+														VerticalAlignment="Top"
+														Margin="{Binding DayCardMargin}"
+														Height="{Binding Height}">
+													<Border Background="{Binding TabColor}"
+															BorderBrush="{Binding TabBorderColor}"
+															BorderThickness="1"
+															CornerRadius="6"
+															Padding="8">
+														<StackPanel>
+															<TextBlock Text="{Binding TimeText}"
+																	   FontSize="11"
+																	   Foreground="Gray"
+																	   IsVisible="{Binding HasTime}"/>
+
+															<TextBlock Text="{Binding Title}"
+																	   FontSize="13"
+																	   FontWeight="SemiBold"/>
+														</StackPanel>
+													</Border>
+												</Button>
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+									</ItemsControl>
+								</Grid>
+							</Grid>
+						</ScrollViewer>
 					</StackPanel>
 				</Border>
 			</StackPanel>
