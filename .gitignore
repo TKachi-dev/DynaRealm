@@ -3,3 +3,10 @@ obj/
 .vs/
 *.user
 *.suo
+
+dynarealm.db
+dynarealm.db-shm
+dynarealm.db-wal
+**/dynarealm.db
+**/dynarealm.db-shm
+**/dynarealm.db-wal

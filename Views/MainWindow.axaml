@@ -16,7 +16,7 @@
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
 
-		<Window.Styles>
+	<Window.Styles>
 		<!-- ページ画面用ボタン共通 -->
 		<Style Selector="Button.pageCommand">
 			<Setter Property="MinHeight" Value="34"/>
@@ -88,6 +88,24 @@
 			<Setter Property="BorderBrush" Value="Transparent"/>
 			<Setter Property="Background" Value="Transparent"/>
 		</Style>
+
+		<!-- 学習ログ入力欄 -->
+		<Style Selector="TextBox.learningInput">
+			<Setter Property="MinHeight" Value="76"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
+			<Setter Property="Background" Value="#F7F7F7"/>
+			<Setter Property="Padding" Value="10"/>
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="TextWrapping" Value="Wrap"/>
+			<Setter Property="VerticalContentAlignment" Value="Top"/>
+		</Style>
+
+		<Style Selector="TextBox.learningInput:focus">
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
+			<Setter Property="Background" Value="#F3F3F3"/>
+		</Style>
 	</Window.Styles>
 
 	<Grid>
@@ -124,7 +142,76 @@
 							Width="100"
 							Click="ShowDayView_Click"/>
 				</StackPanel>
-				
+
+				<!-- 今日の復習一覧 -->
+				<Border IsVisible="{Binding IsLearningTabSelected}"
+						Background="#FFFFFF"
+						CornerRadius="14"
+						Padding="16"
+						Margin="0,0,0,10"
+						BoxShadow="0 6 18 0 #16000000">
+
+					<StackPanel Spacing="10">
+
+						<TextBlock Text="今日の復習"
+								   FontSize="18"
+								   FontWeight="SemiBold"
+								   Foreground="#333333"/>
+
+						<TextBlock Text="今日復習する学習ログはありません"
+								   Foreground="#888888"
+								   IsVisible="{Binding HasNoTodayReviewItems}"/>
+
+						<ItemsControl ItemsSource="{Binding TodayReviewItems}"
+									  IsVisible="{Binding HasTodayReviewItems}">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate x:DataType="vm:LearningReviewItemViewModel">
+									<Button Tag="{Binding PageId}"
+											Click="OpenPageDetailFromDayView_Click"
+											Background="Transparent"
+											BorderThickness="0"
+											Padding="0"
+											HorizontalAlignment="Stretch"
+											HorizontalContentAlignment="Stretch">
+
+										<Border BorderBrush="#E5E5E5"
+												BorderThickness="1"
+												CornerRadius="8"
+												Padding="10"
+												Margin="0,4"
+												Background="#FAFAFA">
+
+											<StackPanel Spacing="4">
+												<Grid ColumnDefinitions="*,Auto">
+													<TextBlock Text="{Binding Title}"
+															   FontSize="14"
+															   FontWeight="SemiBold"
+															   Foreground="#333333"/>
+
+													<TextBlock Grid.Column="1"
+															   Text="{Binding ReviewDateText}"
+															   FontSize="12"
+															   Foreground="#888888"/>
+												</Grid>
+
+												<TextBlock Text="{Binding TechTag}"
+														   FontSize="12"
+														   Foreground="#2F6FED"/>
+
+												<TextBlock Text="{Binding NextAction}"
+														   FontSize="13"
+														   Foreground="#666666"
+														   TextWrapping="Wrap"/>
+											</StackPanel>
+										</Border>
+									</Button>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+
+					</StackPanel>
+				</Border>
+
 				<Border IsVisible="{Binding IsMonthView}"
 						Background="#FFFFFF"
 						CornerRadius="14"
@@ -389,163 +476,56 @@
 		<Border IsVisible="{Binding IsEditorScreen}"
 				Background="#F7F7F5">
 			<Grid Margin="28">
-				<Border MaxWidth="1180"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Stretch"
-						Padding="56,40,56,48"
-						Background="#FFFFFF"
-						CornerRadius="16"
-						BoxShadow="0 10 30 0 #22000000">
 
-					<Grid RowDefinitions="Auto,Auto,Auto,*"
-						  RowSpacing="28">
+				<ScrollViewer VerticalScrollBarVisibility="Auto"
+							  HorizontalScrollBarVisibility="Disabled">
 
-						<!-- 上部バー -->
-						<Grid Grid.Row="0"
-							  ColumnDefinitions="Auto,*,Auto">
-							<Button Classes="pageCommand backCommand"
-									Content="← 戻る"
-									Width="100"
-									Click="BackToCalendar_Click"/>
+					<Border MaxWidth="1180"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Top"
+							Padding="56,40,56,48"
+							Background="#FFFFFF"
+							CornerRadius="16"
+							BoxShadow="0 10 30 0 #22000000">
 
-							<TextBlock Grid.Column="1"
-									   Text="{Binding CurrentScreenTitle}"
-									   FontSize="13"
-									   Foreground="#999999"
-									   VerticalAlignment="Center"
-									   HorizontalAlignment="Center"/>
+						<Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+							  RowSpacing="28">
 
-							<Button Grid.Column="2"
-									Classes="pageCommand saveCommand"
-									Content="保存"
-									Width="100"
-									Click="SaveEditor_Click"/>
-						</Grid>
-
-						<!-- ページタイトル -->
-						<TextBox Grid.Row="1"
-								 Classes="pageTitle"
-								 Text="{Binding CurrentPageEditor.Title}"
-								 PlaceholderText="無題"
-								 HorizontalAlignment="Stretch"/>
-
-						<!-- プロパティ欄 -->
-						<Border Grid.Row="2"
-								BorderBrush="#EEEEEE"
-								BorderThickness="0,1,0,1"
-								Padding="0,18">
-							<Grid ColumnDefinitions="Auto,150,32,Auto,150,*"
-								  VerticalAlignment="Center">
-
-								<TextBlock Text="開始時間"
-										   Foreground="#888888"
-										   VerticalAlignment="Center"/>
-
-								<TextBox Grid.Column="1"
-										 Classes="propertyInput"
-										 Text="{Binding CurrentPageEditor.StartTimeText}"
-										 PlaceholderText="09:00"
-										 Margin="12,0,0,0"/>
-
-								<TextBlock Grid.Column="3"
-										   Text="終了時間"
-										   Foreground="#888888"
-										   VerticalAlignment="Center"/>
-
-								<TextBox Grid.Column="4"
-										 Classes="propertyInput"
-										 Text="{Binding CurrentPageEditor.EndTimeText}"
-										 PlaceholderText="18:00"
-										 Margin="12,0,0,0"/>
-							</Grid>
-						</Border>
-
-						<!-- 本文 -->
-						<TextBox Grid.Row="3"
-								 Classes="pageBody"
-								 Text="{Binding CurrentPageEditor.Body}"
-								 AcceptsReturn="True"
-								 TextWrapping="Wrap"
-								 PlaceholderText="本文を書いてください"
-								 HorizontalAlignment="Stretch"
-								 VerticalAlignment="Stretch"/>
-
-					</Grid>
-				</Border>
-			</Grid>
-		</Border>
-
-				<!-- ページ詳細画面 -->
-		<Border IsVisible="{Binding IsDetailScreen}"
-				Background="#F7F7F5">
-			<Grid Margin="28">
-				<Border MaxWidth="1180"
-						HorizontalAlignment="Stretch"
-						VerticalAlignment="Stretch"
-						Padding="56,40,56,48"
-						Background="#FFFFFF"
-						CornerRadius="16"
-						BoxShadow="0 10 30 0 #22000000">
-
-					<Grid RowDefinitions="Auto,Auto,Auto,*"
-						  RowSpacing="28">
-
-						<!-- 上部バー -->
-						<Grid Grid.Row="0"
-							  ColumnDefinitions="Auto,*,Auto">
-							<Button Classes="pageCommand backCommand"
-									Content="← 戻る"
-									Width="100"
-									Click="BackToCalendar_Click"/>
-
-							<TextBlock Grid.Column="1"
-									   Text="{Binding CurrentScreenTitle}"
-									   FontSize="13"
-									   Foreground="#999999"
-									   VerticalAlignment="Center"
-									   HorizontalAlignment="Center"/>
-
-							<StackPanel Grid.Column="2"
-										Orientation="Horizontal"
-										Spacing="8">
-								<Button Classes="pageCommand deleteCommand"
-										Content="削除"
+							<!-- 上部バー -->
+							<Grid Grid.Row="0"
+								  ColumnDefinitions="Auto,*,Auto">
+								<Button Classes="pageCommand backCommand"
+										Content="← 戻る"
 										Width="100"
-										Click="DeleteDetail_Click"/>
+										Click="BackToCalendar_Click"/>
 
-								<Button Classes="pageCommand saveCommand"
+								<TextBlock Grid.Column="1"
+										   Text="{Binding CurrentScreenTitle}"
+										   FontSize="13"
+										   Foreground="#999999"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Center"/>
+
+								<Button Grid.Column="2"
+										Classes="pageCommand saveCommand"
 										Content="保存"
 										Width="100"
-										Click="SaveDetail_Click"/>
-							</StackPanel>
-						</Grid>
+										Click="SaveEditor_Click"/>
+							</Grid>
 
-						<!-- ページタイトル -->
-						<TextBox Grid.Row="1"
-								 Classes="pageTitle"
-								 Text="{Binding CurrentPageDetail.Title}"
-								 PlaceholderText="無題"
-								 HorizontalAlignment="Stretch"/>
+							<!-- ページタイトル -->
+							<TextBox Grid.Row="1"
+									 Classes="pageTitle"
+									 Text="{Binding CurrentPageEditor.Title}"
+									 PlaceholderText="無題"
+									 HorizontalAlignment="Stretch"/>
 
-						<!-- プロパティ欄 -->
-						<Border Grid.Row="2"
-								BorderBrush="#EEEEEE"
-								BorderThickness="0,1,0,1"
-								Padding="0,18">
-							<StackPanel Spacing="12">
-
-								<Grid ColumnDefinitions="90,*">
-									<TextBlock Text="日付"
-											   Foreground="#888888"
-											   VerticalAlignment="Center"/>
-
-									<TextBlock Grid.Column="1"
-											   Text="{Binding CurrentPageDetail.DateText}"
-											   Foreground="#555555"
-											   VerticalAlignment="Center"/>
-								</Grid>
-
-								<Grid ColumnDefinitions="90,150,32,90,150,*"
+							<!-- プロパティ欄 -->
+							<Border Grid.Row="2"
+									BorderBrush="#EEEEEE"
+									BorderThickness="0,1,0,1"
+									Padding="0,18">
+								<Grid ColumnDefinitions="Auto,150,32,Auto,150,*"
 									  VerticalAlignment="Center">
 
 									<TextBlock Text="開始時間"
@@ -554,7 +534,7 @@
 
 									<TextBox Grid.Column="1"
 											 Classes="propertyInput"
-											 Text="{Binding CurrentPageDetail.StartTimeText}"
+											 Text="{Binding CurrentPageEditor.StartTimeText}"
 											 PlaceholderText="09:00"
 											 Margin="12,0,0,0"/>
 
@@ -565,26 +545,347 @@
 
 									<TextBox Grid.Column="4"
 											 Classes="propertyInput"
-											 Text="{Binding CurrentPageDetail.EndTimeText}"
+											 Text="{Binding CurrentPageEditor.EndTimeText}"
 											 PlaceholderText="18:00"
 											 Margin="12,0,0,0"/>
 								</Grid>
+							</Border>
 
-							</StackPanel>
-						</Border>
+							<!-- 学習ログ入力欄 -->
+							<Border Grid.Row="3"
+									IsVisible="{Binding CurrentPageEditor.IsLearningPage}"
+									BorderBrush="#EEEEEE"
+									BorderThickness="0,0,0,1"
+									Padding="0,0,0,24">
 
-						<!-- 本文 -->
-						<TextBox Grid.Row="3"
-								 Classes="pageBody"
-								 Text="{Binding CurrentPageDetail.Body}"
-								 AcceptsReturn="True"
-								 TextWrapping="Wrap"
-								 PlaceholderText="本文を書いてください"
-								 HorizontalAlignment="Stretch"
-								 VerticalAlignment="Stretch"/>
+								<StackPanel Spacing="16">
 
-					</Grid>
-				</Border>
+									<TextBlock Text="学習ログ"
+											   FontSize="16"
+											   FontWeight="SemiBold"
+											   Foreground="#333333"/>
+
+									<!-- 技術タグ・復習設定 -->
+									<Grid ColumnDefinitions="Auto,170,32,Auto,Auto,32,Auto,150,*"
+										  VerticalAlignment="Center">
+
+										<TextBlock Text="技術タグ"
+												   Foreground="#888888"
+												   VerticalAlignment="Center"/>
+
+										<ComboBox Grid.Column="1"
+												  ItemsSource="{Binding CurrentPageEditor.TechTags}"
+												  SelectedItem="{Binding CurrentPageEditor.TechTag, Mode=TwoWay}"
+												  Width="150"
+												  Margin="12,0,0,0"/>
+
+										<CheckBox Grid.Column="3"
+												  Content="復習する"
+												  IsChecked="{Binding CurrentPageEditor.ReviewRequired, Mode=TwoWay}"
+												  VerticalAlignment="Center"/>
+
+										<TextBlock Grid.Column="6"
+												   Text="復習日"
+												   Foreground="#888888"
+												   VerticalAlignment="Center"/>
+
+										<TextBox Grid.Column="7"
+												 Classes="propertyInput"
+												 Text="{Binding CurrentPageEditor.ReviewDateText}"
+												 PlaceholderText="2026/06/20"
+												 Margin="12,0,0,0"/>
+									</Grid>
+
+									<StackPanel Spacing="6">
+										<TextBlock Text="今日やったこと"
+												   Foreground="#666666"/>
+
+										<TextBox Classes="learningInput"
+												 Text="{Binding CurrentPageEditor.DidToday}"
+												 AcceptsReturn="True"
+												 PlaceholderText="今日取り組んだ内容を書いてください"/>
+									</StackPanel>
+
+									<StackPanel Spacing="6">
+										<TextBlock Text="学んだこと"
+												   Foreground="#666666"/>
+
+										<TextBox Classes="learningInput"
+												 Text="{Binding CurrentPageEditor.Learned}"
+												 AcceptsReturn="True"
+												 PlaceholderText="新しく理解したことを書いてください"/>
+									</StackPanel>
+
+									<StackPanel Spacing="6">
+										<TextBlock Text="詰まったこと"
+												   Foreground="#666666"/>
+
+										<TextBox Classes="learningInput"
+												 Text="{Binding CurrentPageEditor.Stuck}"
+												 AcceptsReturn="True"
+												 PlaceholderText="難しかったこと、詰まった原因を書いてください"/>
+									</StackPanel>
+
+									<StackPanel Spacing="6">
+										<TextBlock Text="解決したこと"
+												   Foreground="#666666"/>
+
+										<TextBox Classes="learningInput"
+												 Text="{Binding CurrentPageEditor.Solved}"
+												 AcceptsReturn="True"
+												 PlaceholderText="どう解決したかを書いてください"/>
+									</StackPanel>
+
+									<StackPanel Spacing="6">
+										<TextBlock Text="次にやること"
+												   Foreground="#666666"/>
+
+										<TextBox Classes="learningInput"
+												 Text="{Binding CurrentPageEditor.NextAction}"
+												 AcceptsReturn="True"
+												 PlaceholderText="次に試すこと、復習することを書いてください"/>
+									</StackPanel>
+
+								</StackPanel>
+							</Border>
+
+							<!-- 自由メモ -->
+							<TextBox Grid.Row="4"
+									 Classes="pageBody"
+									 Text="{Binding CurrentPageEditor.Body}"
+									 AcceptsReturn="True"
+									 TextWrapping="Wrap"
+									 PlaceholderText="自由メモを書いてください"
+									 MinHeight="220"
+									 HorizontalAlignment="Stretch"
+									 VerticalAlignment="Stretch"/>
+
+						</Grid>
+					</Border>
+
+				</ScrollViewer>
+			</Grid>
+		</Border>
+		<!-- ページ詳細画面 -->
+		<Border IsVisible="{Binding IsDetailScreen}"
+				Background="#F7F7F5">
+			<Grid Margin="28">
+
+				<ScrollViewer VerticalScrollBarVisibility="Auto"
+							  HorizontalScrollBarVisibility="Disabled">
+
+					<Border MaxWidth="1180"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Top"
+							Padding="56,40,56,48"
+							Background="#FFFFFF"
+							CornerRadius="16"
+							BoxShadow="0 10 30 0 #22000000">
+
+						<Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+							  RowSpacing="28">
+
+							<!-- 上部バー -->
+							<Grid Grid.Row="0"
+								  ColumnDefinitions="Auto,*,Auto">
+								<Button Classes="pageCommand backCommand"
+										Content="← 戻る"
+										Width="100"
+										Click="BackToCalendar_Click"/>
+
+								<TextBlock Grid.Column="1"
+										   Text="{Binding CurrentScreenTitle}"
+										   FontSize="13"
+										   Foreground="#999999"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Center"/>
+
+								<StackPanel Grid.Column="2"
+											Orientation="Horizontal"
+											Spacing="8">
+									<Button Classes="pageCommand deleteCommand"
+											Content="削除"
+											Width="100"
+											Click="DeleteDetail_Click"/>
+
+									<Button Classes="pageCommand saveCommand"
+											Content="保存"
+											Width="100"
+											Click="SaveDetail_Click"/>
+								</StackPanel>
+							</Grid>
+
+							<!-- ページタイトル -->
+							<TextBox Grid.Row="1"
+									 Classes="pageTitle"
+									 Text="{Binding CurrentPageDetail.Title}"
+									 PlaceholderText="無題"
+									 HorizontalAlignment="Stretch"/>
+
+							<!-- プロパティ欄 -->
+							<Border Grid.Row="2"
+									BorderBrush="#EEEEEE"
+									BorderThickness="0,1,0,1"
+									Padding="0,18">
+								<StackPanel Spacing="12">
+
+									<Grid ColumnDefinitions="90,*">
+										<TextBlock Text="日付"
+												   Foreground="#888888"
+												   VerticalAlignment="Center"/>
+
+										<TextBlock Grid.Column="1"
+												   Text="{Binding CurrentPageDetail.DateText}"
+												   Foreground="#555555"
+												   VerticalAlignment="Center"/>
+									</Grid>
+
+									<Grid ColumnDefinitions="90,150,32,90,150,*"
+										  VerticalAlignment="Center">
+
+										<TextBlock Text="開始時間"
+												   Foreground="#888888"
+												   VerticalAlignment="Center"/>
+
+										<TextBox Grid.Column="1"
+												 Classes="propertyInput"
+												 Text="{Binding CurrentPageDetail.StartTimeText}"
+												 PlaceholderText="09:00"
+												 Margin="12,0,0,0"/>
+
+										<TextBlock Grid.Column="3"
+												   Text="終了時間"
+												   Foreground="#888888"
+												   VerticalAlignment="Center"/>
+
+										<TextBox Grid.Column="4"
+												 Classes="propertyInput"
+												 Text="{Binding CurrentPageDetail.EndTimeText}"
+												 PlaceholderText="18:00"
+												 Margin="12,0,0,0"/>
+									</Grid>
+
+								</StackPanel>
+							</Border>
+
+							<!-- 学習ログ入力欄 -->
+							<Border Grid.Row="3"
+									IsVisible="{Binding CurrentPageDetail.IsLearningPage}"
+									BorderBrush="#EEEEEE"
+									BorderThickness="0,0,0,1"
+									Padding="0,0,0,24">
+
+								<StackPanel Spacing="16">
+
+									<TextBlock Text="学習ログ"
+											   FontSize="16"
+											   FontWeight="SemiBold"
+											   Foreground="#333333"/>
+
+									<!-- 技術タグ・復習設定 -->
+									<Grid ColumnDefinitions="Auto,170,32,Auto,Auto,32,Auto,150,32,Auto,*"
+										  VerticalAlignment="Center">
+
+										<TextBlock Text="技術タグ"
+												   Foreground="#888888"
+												   VerticalAlignment="Center"/>
+
+										<ComboBox Grid.Column="1"
+												  ItemsSource="{Binding CurrentPageDetail.TechTags}"
+												  SelectedItem="{Binding CurrentPageDetail.TechTag, Mode=TwoWay}"
+												  Width="150"
+												  Margin="12,0,0,0"/>
+
+										<CheckBox Grid.Column="3"
+												  Content="復習する"
+												  IsChecked="{Binding CurrentPageDetail.ReviewRequired, Mode=TwoWay}"
+												  VerticalAlignment="Center"/>
+
+										<TextBlock Grid.Column="6"
+												   Text="復習日"
+												   Foreground="#888888"
+												   VerticalAlignment="Center"/>
+
+										<TextBox Grid.Column="7"
+												 Classes="propertyInput"
+												 Text="{Binding CurrentPageDetail.ReviewDateText}"
+												 PlaceholderText="2026/06/20"
+												 Margin="12,0,0,0"/>
+
+										<CheckBox Grid.Column="9"
+												  Content="復習済み"
+												  IsChecked="{Binding CurrentPageDetail.ReviewDone, Mode=TwoWay}"
+												  VerticalAlignment="Center"/>
+									</Grid>
+
+									<StackPanel Spacing="6">
+										<TextBlock Text="今日やったこと"
+												   Foreground="#666666"/>
+
+										<TextBox Classes="learningInput"
+												 Text="{Binding CurrentPageDetail.DidToday}"
+												 AcceptsReturn="True"
+												 PlaceholderText="今日取り組んだ内容を書いてください"/>
+									</StackPanel>
+
+									<StackPanel Spacing="6">
+										<TextBlock Text="学んだこと"
+												   Foreground="#666666"/>
+
+										<TextBox Classes="learningInput"
+												 Text="{Binding CurrentPageDetail.Learned}"
+												 AcceptsReturn="True"
+												 PlaceholderText="新しく理解したことを書いてください"/>
+									</StackPanel>
+
+									<StackPanel Spacing="6">
+										<TextBlock Text="詰まったこと"
+												   Foreground="#666666"/>
+
+										<TextBox Classes="learningInput"
+												 Text="{Binding CurrentPageDetail.Stuck}"
+												 AcceptsReturn="True"
+												 PlaceholderText="難しかったこと、詰まった原因を書いてください"/>
+									</StackPanel>
+
+									<StackPanel Spacing="6">
+										<TextBlock Text="解決したこと"
+												   Foreground="#666666"/>
+
+										<TextBox Classes="learningInput"
+												 Text="{Binding CurrentPageDetail.Solved}"
+												 AcceptsReturn="True"
+												 PlaceholderText="どう解決したかを書いてください"/>
+									</StackPanel>
+
+									<StackPanel Spacing="6">
+										<TextBlock Text="次にやること"
+												   Foreground="#666666"/>
+
+										<TextBox Classes="learningInput"
+												 Text="{Binding CurrentPageDetail.NextAction}"
+												 AcceptsReturn="True"
+												 PlaceholderText="次に試すこと、復習することを書いてください"/>
+									</StackPanel>
+
+								</StackPanel>
+							</Border>
+
+							<!-- 自由メモ -->
+							<TextBox Grid.Row="4"
+									 Classes="pageBody"
+									 Text="{Binding CurrentPageDetail.Body}"
+									 AcceptsReturn="True"
+									 TextWrapping="Wrap"
+									 PlaceholderText="自由メモを書いてください"
+									 MinHeight="220"
+									 HorizontalAlignment="Stretch"
+									 VerticalAlignment="Stretch"/>
+
+						</Grid>
+					</Border>
+
+				</ScrollViewer>
 			</Grid>
 		</Border>
 

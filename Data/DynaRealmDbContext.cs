@@ -1,14 +1,15 @@
 ﻿using DynaRealm.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
 
 namespace DynaRealm.Data
 {
     public class DynaRealmDbContext : DbContext
     {
-        public DbSet<Page> Pages {  get; set; }
+        public DbSet<Page> Pages { get; set; }
+
+        public DbSet<LearningLog> LearningLogs { get; set; }
 
         public DbSet<Tab> Tabs { get; set; }
 
@@ -20,13 +21,21 @@ namespace DynaRealm.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=dynarealm.db");
+            var dbPath = Path.Combine(AppContext.BaseDirectory, "dynarealm.db");
+
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PageSubTag>()
                 .HasKey(pst => new { pst.PageId, pst.SubTagId });
+
+            modelBuilder.Entity<LearningLog>()
+                .HasOne(ll => ll.Page)
+                .WithOne()
+                .HasForeignKey<LearningLog>(ll => ll.PageId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<SubTag>()
                 .HasIndex(st => st.NormalizedName)

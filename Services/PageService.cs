@@ -1,5 +1,6 @@
 ﻿using DynaRealm.Data;
 using DynaRealm.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,6 +85,83 @@ namespace DynaRealm.Services
             }
 
             db.Pages.Remove(page);
+            db.SaveChanges();
+        }
+
+        public bool IsLearningTab(Guid tabId)
+        {
+            using var db = new DynaRealmDbContext();
+
+            var tab = db.Tabs.FirstOrDefault(t => t.Id == tabId);
+
+            return tab?.Name == "学習";
+        }
+
+        public LearningLog? GetLearningLogByPageId(Guid pageId)
+        {
+            using var db = new DynaRealmDbContext();
+
+            return db.LearningLogs
+                .FirstOrDefault(ll => ll.PageId == pageId);
+        }
+
+        public List<LearningLog> GetTodayReviewLearningLogs(DateTime targetDate)
+        {
+            using var db = new DynaRealmDbContext();
+
+            var today = targetDate.Date;
+
+            return db.LearningLogs
+                .Include(ll => ll.Page)
+                .Where(ll =>
+                    ll.ReviewRequired &&
+                    ll.ReviewDate.HasValue &&
+                    ll.ReviewDate.Value.Date <= today &&
+                    !ll.ReviewDone)
+                .OrderBy(ll => ll.ReviewDate)
+                .ThenByDescending(ll => ll.UpdatedAt)
+                .ToList();
+        }
+
+        public void UpsertLearningLog(
+            Guid pageId,
+            string didToday,
+            string learned,
+            string stuck,
+            string solved,
+            string nextAction,
+            bool reviewRequired,
+            DateTime? reviewDate,
+            bool reviewDone,
+            string techTag)
+        {
+            using var db = new DynaRealmDbContext();
+
+            var learningLog = db.LearningLogs
+                .FirstOrDefault(ll => ll.PageId == pageId);
+
+            if (learningLog == null)
+            {
+                learningLog = new LearningLog
+                {
+                    PageId = pageId,
+                    CreatedAt = DateTime.Now
+                };
+
+                db.LearningLogs.Add(learningLog);
+            }
+
+            learningLog.DidToday = didToday;
+            learningLog.Learned = learned;
+            learningLog.Stuck = stuck;
+            learningLog.Solved = solved;
+            learningLog.NextAction = nextAction;
+            learningLog.ReviewRequired = reviewRequired;
+            learningLog.ReviewDate = reviewRequired ? reviewDate : null;
+            learningLog.ReviewDone = reviewRequired && reviewDone;
+            learningLog.TechTag = techTag;
+            learningLog.UpdatedAt = DateTime.Now;
+
             db.SaveChanges();
         }
 

@@ -23,6 +23,17 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public DayScheduleViewModel? CurrentDaySchedule { get; set; }
 
+    public ObservableCollection<LearningReviewItemViewModel> TodayReviewItems { get; set; } = new();
+
+    public bool IsLearningTabSelected =>
+        Tabs.FirstOrDefault(t => t.Id == _selectedTabId)?.Name == "学習";
+
+    public bool HasTodayReviewItems =>
+        TodayReviewItems.Any();
+
+    public bool HasNoTodayReviewItems =>
+        !TodayReviewItems.Any();
+
     public bool IsDayOverlayVisible { get; set; }
 
     public string CurrentScreen { get; set; } = "Calendar";
@@ -90,11 +101,13 @@ public partial class MainWindowViewModel : ViewModelBase
         // カレンダー日付生成
         UpdateCurrentMonthText();
         CreateCalendarDays(DateTime.Today);
+        ReloadTodayReviews();
     }
 
     public void ReloadCalendar()
     {
         CreateCalendarDays(_currentDisplayDate);
+        ReloadTodayReviews();
 
         if (IsDayView)
         {
@@ -126,6 +139,9 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         CreateCalendarDays(_currentDisplayDate);
+        ReloadTodayReviews();
+
+        OnPropertyChanged(nameof(IsLearningTabSelected));
     }
 
     public void ShowDayOverlay(CalendarDayViewModel day)
@@ -285,5 +301,34 @@ public partial class MainWindowViewModel : ViewModelBase
                     .ToList()
             });
         }
+    }
+
+    private void ReloadTodayReviews()
+    {
+        TodayReviewItems.Clear();
+
+        if (IsLearningTabSelected)
+        {
+            var pageService = new PageService();
+
+            var learningLogs = pageService.GetTodayReviewLearningLogs(DateTime.Today);
+
+            foreach (var log in learningLogs)
+            {
+                TodayReviewItems.Add(new LearningReviewItemViewModel
+                {
+                    PageId = log.PageId,
+                    Title = log.Page?.Title ?? "無題",
+                    TechTag = log.TechTag,
+                    ReviewDate = log.ReviewDate,
+                    NextAction = log.NextAction
+                });
+            }
+        }
+
+        OnPropertyChanged(nameof(TodayReviewItems));
+        OnPropertyChanged(nameof(IsLearningTabSelected));
+        OnPropertyChanged(nameof(HasTodayReviewItems));
+        OnPropertyChanged(nameof(HasNoTodayReviewItems));
     }
 }
