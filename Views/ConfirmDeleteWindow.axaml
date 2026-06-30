@@ -1,0 +1,49 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DynaRealm.Views.ConfirmDeleteWindow"
+        Width="420"
+        Height="220"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="削除確認">
+
+    <Border Background="#F7F7F5"
+            Padding="24">
+
+        <Grid RowDefinitions="*,Auto">
+
+            <StackPanel Spacing="12"
+                        VerticalAlignment="Center">
+
+                <TextBlock Text="このページを削除してもよろしいですか？"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           Foreground="#333333"
+                           TextWrapping="Wrap"/>
+
+                <TextBlock Text="削除したページは元に戻せません。"
+                           FontSize="13"
+                           Foreground="#888888"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="10">
+
+                <Button Content="キャンセル"
+                        Width="100"
+                        Height="34"
+                        Click="Cancel_Click"/>
+
+                <Button Content="削除"
+                        Width="100"
+                        Height="34"
+                        Background="#C62828"
+                        Foreground="#FFFFFF"
+                        Click="Delete_Click"/>
+            </StackPanel>
+
+        </Grid>
+    </Border>
+</Window>
