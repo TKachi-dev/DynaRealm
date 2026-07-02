@@ -568,6 +568,11 @@
 											   FontSize="16"
 											   FontWeight="SemiBold"
 											   Foreground="#333333"/>
+									<TextBlock Text="{Binding CurrentPageEditor.ErrorMessage}"
+											   FontSize="13"
+											   Foreground="#C62828"
+											   TextWrapping="Wrap"
+											   IsVisible="{Binding CurrentPageEditor.HasErrorMessage}"/>
 
 									<!-- 技術タグ・復習設定 -->
 									<Grid ColumnDefinitions="Auto,170,32,Auto,Auto,32,Auto,150,*"
@@ -781,6 +786,10 @@
 
 								<StackPanel Spacing="16">
 
+									<TextBlock Text="学習ログ"
+											   FontSize="16"
+											   FontWeight="SemiBold"
+											   Foreground="#333333"/>
 									<TextBlock Text="学習ログ"
 											   FontSize="16"
 											   FontWeight="SemiBold"

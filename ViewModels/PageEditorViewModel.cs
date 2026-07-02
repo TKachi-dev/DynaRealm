@@ -27,7 +27,7 @@ namespace DynaRealm.ViewModels
             "C#",
             "Java",
             "Python",
-            "javascript",
+            "JavaScript",
             "PowerShell",
             "Git",
             "Avalonia",
@@ -50,6 +50,11 @@ namespace DynaRealm.ViewModels
 
         public string ReviewDateText { get; set; } = string.Empty;
 
+        public string ErrorMessage { get; set; } = string.Empty;
+
+        public bool HasErrorMessage =>
+            !string.IsNullOrWhiteSpace(ErrorMessage);
+
         public PageEditorViewModel()
         {
         }
@@ -63,8 +68,10 @@ namespace DynaRealm.ViewModels
             IsLearningPage = pageService.IsLearningTab(TabId);
         }
 
-        public void Save()
+        public bool Save()
         {
+            ClearErrorMessage();
+
             using var db = new DynaRealmDbContext();
 
             var now = DateTime.Now;
@@ -83,8 +90,20 @@ namespace DynaRealm.ViewModels
                 endTime = parsedEndTime;
             }
 
-            if (DateTime.TryParse(ReviewDateText, out var parsedReviewDate))
+            if (IsLearningPage && ReviewRequired)
             {
+                if (string.IsNullOrWhiteSpace(ReviewDateText))
+                {
+                    SetErrorMessage("復習する場合は、復習日を入力してください。");
+                    return false;
+                }
+
+                if (!DateTime.TryParse(ReviewDateText, out var parsedReviewDate))
+                {
+                    SetErrorMessage("復習日は日付として入力してください。例：2026/06/20");
+                    return false;
+                }
+
                 reviewDate = parsedReviewDate.Date;
             }
 
@@ -123,6 +142,24 @@ namespace DynaRealm.ViewModels
                     false,
                     TechTag);
             }
+
+            return true;
+        }
+
+        private void SetErrorMessage(string message)
+        {
+            ErrorMessage = message;
+
+            OnPropertyChanged(nameof(ErrorMessage));
+            OnPropertyChanged(nameof(HasErrorMessage));
+        }
+
+        private void ClearErrorMessage()
+        {
+            ErrorMessage = string.Empty;
+
+            OnPropertyChanged(nameof(ErrorMessage));
+            OnPropertyChanged(nameof(HasErrorMessage));
         }
     }
 }

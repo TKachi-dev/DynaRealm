@@ -129,7 +129,12 @@ public partial class MainWindow : Window
             return;
         }
 
-        ViewModel.CurrentPageEditor.Save();
+        var saved = ViewModel.CurrentPageEditor.Save();
+
+        if (!saved)
+        {
+            return;
+        }
 
         ViewModel.ReloadCalendar();
         ViewModel.ShowCalendarScreen();
@@ -142,7 +147,12 @@ public partial class MainWindow : Window
             return;
         }
 
-        ViewModel.CurrentPageDetail.Save();
+        var saved = ViewModel.CurrentPageDetail.Save();
+
+        if (!saved)
+        {
+            return;
+        }
 
         ViewModel.ReloadCalendar();
         ViewModel.ShowCalendarScreen();
