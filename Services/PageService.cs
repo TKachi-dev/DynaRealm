@@ -123,6 +123,26 @@ namespace DynaRealm.Services
                 .ToList();
         }
 
+        public List<LearningLog> GetReviewLearningLogsByDateRange(
+            DateTime startDate,
+            DateTime endDateExclusive)
+        {
+            using var db = new DynaRealmDbContext();
+
+            var rangeStart = startDate.Date;
+            var rangeEnd = endDateExclusive.Date;
+
+            return db.LearningLogs
+                .Where(ll =>
+                    ll.ReviewRequired &&
+                    ll.ReviewDate.HasValue &&
+                    ll.ReviewDate.Value >= rangeStart &&
+                    ll.ReviewDate.Value < rangeEnd)
+                .OrderBy(ll => ll.ReviewDate)
+                .ThenByDescending(ll => ll.UpdatedAt)
+                .ToList();
+        }
+
         public void UpsertLearningLog(
             Guid pageId,
             string didToday,

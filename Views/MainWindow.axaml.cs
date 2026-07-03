@@ -129,7 +129,12 @@ public partial class MainWindow : Window
             return;
         }
 
-        ViewModel.CurrentPageEditor.Save();
+        var saved = ViewModel.CurrentPageEditor.Save();
+
+        if (!saved)
+        {
+            return;
+        }
 
         ViewModel.ReloadCalendar();
         ViewModel.ShowCalendarScreen();
@@ -142,15 +147,29 @@ public partial class MainWindow : Window
             return;
         }
 
-        ViewModel.CurrentPageDetail.Save();
+        var saved = ViewModel.CurrentPageDetail.Save();
+
+        if (!saved)
+        {
+            return;
+        }
 
         ViewModel.ReloadCalendar();
         ViewModel.ShowCalendarScreen();
     }
 
-    private void DeleteDetail_Click(object? sender, RoutedEventArgs e)
+    private async void DeleteDetail_Click(object? sender, RoutedEventArgs e)
     {
         if (ViewModel.CurrentPageDetail == null)
+        {
+            return;
+        }
+
+        var confirmWindow = new ConfirmDeleteWindow();
+
+        var result = await confirmWindow.ShowDialog<bool?>(this);
+
+        if (result != true)
         {
             return;
         }

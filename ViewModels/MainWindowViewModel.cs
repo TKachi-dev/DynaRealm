@@ -279,8 +279,19 @@ public partial class MainWindowViewModel : ViewModelBase
             targetDate.Month,
             _selectedTabId);
 
-        var firstDayOfMonth = new DateTime(targetDate.Year, targetDate.Month, 1);
-        var startDate = firstDayOfMonth.AddDays(-(int)firstDayOfMonth.DayOfWeek);
+        var firstDayOfMonth =
+            new DateTime(targetDate.Year, targetDate.Month, 1);
+
+        var startDate =
+            firstDayOfMonth.AddDays(-(int)firstDayOfMonth.DayOfWeek);
+
+        var endDateExclusive = startDate.AddDays(42);
+
+        var reviewLogs = IsLearningTabSelected
+            ? pageService.GetReviewLearningLogsByDateRange(
+                startDate,
+                endDateExclusive)
+            : new System.Collections.Generic.List<LearningLog>();
 
         for (int i = 0; i < 42; i++)
         {
@@ -290,6 +301,10 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 Date = date,
                 IsCurrentMonth = date.Month == targetDate.Month,
+
+                ReviewStatus = GetReviewStatus(
+                    date,
+                    reviewLogs),
 
                 Pages = pages
                     .Where(p => p.StartDate.Date == date.Date)
@@ -301,6 +316,34 @@ public partial class MainWindowViewModel : ViewModelBase
                     .ToList()
             });
         }
+    }
+
+    private CalendarReviewStatus GetReviewStatus(
+        DateTime date,
+        System.Collections.Generic.List<LearningLog> reviewLogs)
+    {
+        var logsForDate = reviewLogs
+            .Where(log =>
+                log.ReviewDate.HasValue &&
+                log.ReviewDate.Value.Date == date.Date)
+            .ToList();
+
+        if (!logsForDate.Any())
+        {
+            return CalendarReviewStatus.None;
+        }
+
+        var hasIncompleteReview =
+            logsForDate.Any(log => !log.ReviewDone);
+
+        if (hasIncompleteReview)
+        {
+            return date.Date <= DateTime.Today
+                ? CalendarReviewStatus.Overdue
+                : CalendarReviewStatus.Upcoming;
+        }
+
+        return CalendarReviewStatus.Completed;
     }
 
     private void ReloadTodayReviews()
