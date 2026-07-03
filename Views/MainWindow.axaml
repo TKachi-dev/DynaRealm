@@ -276,8 +276,8 @@
 												Padding="0"
 												HorizontalAlignment="Stretch"
 												VerticalAlignment="Stretch">
-											<Border BorderBrush="Gray"
-													BorderThickness="0.5"
+											<Border BorderBrush="{Binding ReviewBorderColor}"
+													BorderThickness="{Binding ReviewBorderThickness}"
 													MinHeight="80"
 													Padding="6"
 													Background="{Binding BackgroundColor}">
@@ -790,10 +790,12 @@
 											   FontSize="16"
 											   FontWeight="SemiBold"
 											   Foreground="#333333"/>
-									<TextBlock Text="学習ログ"
-											   FontSize="16"
-											   FontWeight="SemiBold"
-											   Foreground="#333333"/>
+
+									<TextBlock Text="{Binding CurrentPageDetail.ErrorMessage}"
+											   FontSize="13"
+											   Foreground="#C62828"
+											   TextWrapping="Wrap"
+											   IsVisible="{Binding CurrentPageDetail.HasErrorMessage}"/>
 
 									<!-- 技術タグ・復習設定 -->
 									<Grid ColumnDefinitions="Auto,170,32,Auto,Auto,32,Auto,150,32,Auto,*"
